@@ -1,14 +1,11 @@
 
 import { Vue, Options } from "vue-class-component";
 
-import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
 export default class Header extends Vue {
   private store = useStore();
-  // private userService = new UserService();
-  // public userData: UserData;
   public userSortName: string = "";
   private lang: string;
   private searchValue = "";

@@ -5,14 +5,14 @@
     </el-header>
     <el-container style="height: calc(100% - 48px); overflow: hidden">
     
-     <el-aside class="screen-aside">
+     <!-- <el-aside class="screen-aside">
         <Aside></Aside>
-      </el-aside>
+      </el-aside> -->
    
       <el-main class="screen-main">
         <el-scrollbar class="screen-main-scroll"
           ><router-view></router-view></el-scrollbar>
-          <OpenChat></OpenChat>
+          <!-- <OpenChat></OpenChat> -->
       </el-main>
 
     </el-container>

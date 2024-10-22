@@ -1,12 +1,8 @@
 <template>
-  <h1>hello world</h1>
+  <ChatBox></ChatBox>
 </template>
-<script lang="ts">
-
-import { Options, Vue } from "vue-class-component";
-
-export default class Summary extends Vue {
-}
+<script lang="ts" setup>
+  import ChatBox from '../../components/common/ChatBox.vue';
 </script>
 
 <style lang="less">
