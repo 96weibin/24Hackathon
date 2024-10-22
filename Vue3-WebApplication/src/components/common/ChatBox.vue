@@ -31,6 +31,7 @@
 import { ref, onMounted } from 'vue';  
 import axios from 'axios';
 import LineChart from '../Charts/lineChart.vue';
+import {ChatService} from '../../services/chatService'
 interface Message {  
   content: string;  
   isSender: boolean; // true 表示发送者（右边），false 表示接收者（左边）  
@@ -39,7 +40,7 @@ interface Message {
   data?: any;
 
 }  
-
+const chatService = new ChatService();
 onMounted(()=> {})
 
 
@@ -80,7 +81,7 @@ const sendMessage = (message?: string) => {
   let sendStr = newMessage.value.trim().length == 0? message: newMessage.value.trim();
   if (sendStr) {  
     messages.value.push({ content: sendStr, isSender: true });  
-    postMsg(sendStr).then((res: any) => {
+    chatService.postIntent(sendStr).then((res: any) => {
       console.log(res)
       let newRes: Message = { content: res.data.result.prediction.topIntent, isSender: false, intents: res.data.result.prediction.intents, data: res.data};
 
@@ -104,7 +105,7 @@ const sendMessage = (message?: string) => {
   flex-direction: column;  
   height: 100%; /* 使聊天室充满整个视口高度 */  
   width: 100%;  
-  max-width: 500px; /* 可根据需要调整宽度 */  
+  max-width: 1000px; /* 可根据需要调整宽度 */  
   margin: 0 auto;  
   box-sizing: border-box;  
   padding: 10px;  

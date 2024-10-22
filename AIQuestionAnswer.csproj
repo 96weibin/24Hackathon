@@ -61,6 +61,9 @@
     <PublishDatabases>false</PublishDatabases>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Azure.AI.Language.Conversations, Version=1.1.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>packages\Azure.AI.Language.Conversations.1.1.0\lib\netstandard2.0\Azure.AI.Language.Conversations.dll</HintPath>
+    </Reference>
     <Reference Include="Azure.AI.Language.QuestionAnswering, Version=1.1.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
       <HintPath>packages\Azure.AI.Language.QuestionAnswering.1.1.0\lib\netstandard2.0\Azure.AI.Language.QuestionAnswering.dll</HintPath>
     </Reference>
@@ -268,6 +271,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\ApiControllerExtensions.cs" />
+    <Compile Include="Controllers\CLUController.cs" />
     <Compile Include="Controllers\ControllerExtensions.cs" />
     <Compile Include="Controllers\FamilyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -276,10 +280,12 @@
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DAL\ConversationAnalysisClientFactory.cs" />
     <Compile Include="DAL\QuestionAnswerClientFactory .cs" />
     <Compile Include="DAL\DbContextFactory.cs" />
     <Compile Include="DataContract\ChatContract.cs" />
     <Compile Include="DataContract\CommentContract.cs" />
+    <Compile Include="DataContract\Intent.cs" />
     <Compile Include="DataContract\ProductContract.cs" />
     <Compile Include="DataContract\FamilyContract.cs" />
     <Compile Include="DataContract\Mail.cs" />

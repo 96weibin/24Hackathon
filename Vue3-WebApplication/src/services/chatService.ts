@@ -1,40 +1,18 @@
 import { WebApi } from "./webApi";
 
 export class ChatService {
-
-
-    public getChatToken(p: Products, userid: number) {
-        let url = `Chat/GetChatToken/${p}/${userid}`;
-        return WebApi.get(url);
-    }
-
-    public saveChatRecord(request: ChatData) {
-        let url = "Chat/SaveChatRecord";
-        return WebApi.post(url, request)
-    }
-
-    public postQuestion(request: QuestionData) {
-        let url = "Chat/PostQuestion";
-        return WebApi.post(url, request)
+    public postIntent(str: string){
+        let url= `ai/intent`;
+        return WebApi.post(url, str)
     }
 }
-export enum Products {
-    Unknow,
-    PE,
-    MSC,
-    APM,
-    AOTH
-}
 
-export interface ChatData {
-    isQuestion: boolean;
-    timeStamp: string;
-    content: string;
-    userId: number;
-}
-
-export interface QuestionData {
-    userId: number;
-    title: string;
-    chats: ChatData[];
+export interface ChatResult {
+    caseName?: string,
+    category: number,
+    confidenceScore: number,
+    modelName: string,
+    nonBasisType: number,
+    question: string,
+    topNumber: number
 }

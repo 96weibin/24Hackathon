@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="chartContainer" ref="myCharts"></div>
+        {{ msg }}
     </div>
 </template>
 
