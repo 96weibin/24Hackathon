@@ -11,7 +11,7 @@
         <LineChart :data="message.data" :msg="message.text" v-if="message.isChart"></LineChart>
         
         <div v-for="(item, index) in message.buttons" :key="index">
-          <el-button style="margin-top: 5px;" type="info" @click="sendMessage(item)">{{item}}</el-button>
+          <el-button style="margin-top: 5px;" type="info" @click="item.callback? item.callback(item.text): sendMessage(item.text)">{{item.text}}</el-button>
         </div>
 
       </div>  
@@ -35,17 +35,21 @@ import axios from 'axios';
 import LineChart from '../Charts/lineChart.vue';
 import OptimizationResult from '../common/OptimizationResult.vue'
 import {ChatResult, ChatService} from '../../services/chatService'
+import { tr } from 'element-plus/es/locale';
 interface Message {  
   text: string;  
   showtemplate?: boolean;
   isSender: boolean; // true 表示发送者（右边），false 表示接收者（左边）  
   isChart?: boolean;
-  buttons?: any[];
+  buttons?: {text: string, callback?: Function}[];
   data?: any;
 
 }  
 const chatService = new ChatService();
-onMounted(()=> {})
+onMounted(()=> {
+
+  chatService.graphQlTest('{"query": "query { cases { items { name } } }"}')
+})
 
 
 
@@ -55,6 +59,22 @@ const messages = ref<Message[]>([
 
 const newMessage = ref<string>('');  
 
+
+const accept = (item)=> {
+  messages.value.push({ text: item, isSender: true });  
+  let newRes: Message = { 
+    text: "allready updated this is results", 
+    isSender: false, 
+    data:{}
+  };
+  newRes.isChart = true
+  newRes.data.chartData = {
+    xAxis: ['Factor 1', 'Factor 2', 'Factor 3', 'Factor 4', 'Factor 5'],
+    text: 'OBJ',
+    data: [5, 12, 30, 80, 100]
+  }
+  messages.value.push(newRes);  
+}
 // 发送消息的方法  
 const sendMessage = (message?: string) => {  
   let sendStr = newMessage.value.trim().length == 0? message: newMessage.value.trim();
@@ -70,13 +90,13 @@ const sendMessage = (message?: string) => {
       switch (data.category) {
         case 0:
           if(data.question.indexOf('?') == -1) {
-            newRes.text = 'you might want to try asking the following questions:'
+            newRes.text = 'You might want to try asking the following questions:'
           } else {
             newRes.text = "I'm sorry, I don't quite understand your question, but you might want to try asking the following questions:"
           }
           newRes.buttons = [
-            'Can you show me the top 5 non basis factors which impact the economy? ',
-            'Can you adjust to non-basis factors to achieve better economic benefits?'
+            {text: 'Can you show me the top 5 non basis factors which impact the economy? '},
+            {text: 'Can you adjust to non-basis factors to achieve better economic benefits?'}
           ]
           break;
         case 1: 
@@ -97,18 +117,16 @@ const sendMessage = (message?: string) => {
           break;
         case 2: 
             newRes.text = "The adjusted target value is 1899, which is a 15% increase from the previous result of 1500. Would you like me to create a new case for you?"
-            newRes.buttons = ['yes', 'no']
+            newRes.buttons = [
+              {text: 'Yes', callback: accept},
+              {text: 'No'}
+            ]
           break;
         default:
           newRes.text = "success"
           break;
       }
       
-
-      // if(Math.random()> 0.5) {
-      //   console.log('has Chart......')
-      //   newRes.isChart = true;
-      // }
       messages.value.push(newRes);  
     })
 
