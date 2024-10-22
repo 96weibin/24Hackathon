@@ -6,12 +6,14 @@
         :key="index"  
         :class="['message', message.isSender ? 'sender' : 'receiver']" 
       >  
-        <span>{{ message.content }}</span>  
-        {{ message.isChart }}
-        <LineChart :data="message.data" :msg="message.content" v-if="message.isChart"></LineChart>
-        <div v-for="(item, index) in message.intents" :key="index">
-          <el-button type="info" @click="sendMessage(item.category)">{{item.category}}</el-button>
+        <span>{{ message.text }}</span>  
+        <OptimizationResult v-if="message.showtemplate" :data="message.data"></OptimizationResult>
+        <LineChart :data="message.data" :msg="message.text" v-if="message.isChart"></LineChart>
+        
+        <div v-for="(item, index) in message.buttons" :key="index">
+          <el-button style="margin-top: 5px;" type="info" @click="sendMessage(item)">{{item}}</el-button>
         </div>
+
       </div>  
     </div>  
     <div class="input-container">  
@@ -31,12 +33,14 @@
 import { ref, onMounted } from 'vue';  
 import axios from 'axios';
 import LineChart from '../Charts/lineChart.vue';
-import {ChatService} from '../../services/chatService'
+import OptimizationResult from '../common/OptimizationResult.vue'
+import {ChatResult, ChatService} from '../../services/chatService'
 interface Message {  
-  content: string;  
+  text: string;  
+  showtemplate?: boolean;
   isSender: boolean; // true 表示发送者（右边），false 表示接收者（左边）  
   isChart?: boolean;
-  intents?: any[];
+  buttons?: any[];
   data?: any;
 
 }  
@@ -46,49 +50,65 @@ onMounted(()=> {})
 
 
 const messages = ref<Message[]>([  
-  {content: "hello, I am AI assistant for AUP Economic.  What can I do for you?", isSender: false}
+  {text: "hello, I am AI assistant for AUP Economic.  What can I do for you?", isSender: false}
 ]);  
 
 const newMessage = ref<string>('');  
 
-const postMsg = (text) => {
-  const url = "https://langcreatedinus.cognitiveservices.azure.com/language/:analyze-conversations?api-version=2022-10-01-preview";
-  const config = {
-    "headers": {
-      "Ocp-Apim-Subscription-Key": "c1c2002fbc0f4af69af1b852d6945293",
-      "Content-Type": "application/json"
-    }
-  }
-  const data = {
-    "kind": "Conversation",
-    "analysisInput": {
-      "conversationItem": {
-        "id": "1",
-        "participantId": "1",
-        "text": text
-      }
-    },
-    "parameters": {
-      "projectName": "projcreatedinus",
-      "deploymentName": "langdeloy",
-      "stringIndexType": "TextElement_V8"
-    }
-  }
-  return axios.post(url, data, config)
-}
 // 发送消息的方法  
 const sendMessage = (message?: string) => {  
   let sendStr = newMessage.value.trim().length == 0? message: newMessage.value.trim();
   if (sendStr) {  
-    messages.value.push({ content: sendStr, isSender: true });  
-    chatService.postIntent(sendStr).then((res: any) => {
-      console.log(res)
-      let newRes: Message = { content: res.data.result.prediction.topIntent, isSender: false, intents: res.data.result.prediction.intents, data: res.data};
+    messages.value.push({ text: sendStr, isSender: true });  
+    chatService.postIntent(sendStr).then((res) => {
+      let data:ChatResult = res.data as ChatResult;
+      let newRes: Message = { 
+        text: "", 
+        isSender: false, 
+        data
+      };
+      switch (data.category) {
+        case 0:
+          if(data.question.indexOf('?') == -1) {
+            newRes.text = 'you might want to try asking the following questions:'
+          } else {
+            newRes.text = "I'm sorry, I don't quite understand your question, but you might want to try asking the following questions:"
+          }
+          newRes.buttons = [
+            'Can you show me the top 5 non basis factors which impact the economy? ',
+            'Can you adjust to non-basis factors to achieve better economic benefits?'
+          ]
+          break;
+        case 1: 
+          if(data.caseName && data.modelName) {
+            //get model name case name
+          } else {
 
-      if(Math.random()> 0.5) {
-        console.log('has Chart......')
-        newRes.isChart = true;
+          }
+
+          newRes.text = `            `
+          newRes.showtemplate = true
+          newRes.isChart = true
+          newRes.data.chartData = {
+            xAxis: ['Factor 1', 'Factor 2', 'Factor 3', 'Factor 4', 'Factor 5'],
+            text: 'Sale',
+            data: [5, -5, 10, 8,-3]
+          }
+          break;
+        case 2: 
+            newRes.text = "The adjusted target value is 1899, which is a 15% increase from the previous result of 1500. Would you like me to create a new case for you?"
+            newRes.buttons = ['yes', 'no']
+          break;
+        default:
+          newRes.text = "success"
+          break;
       }
+      
+
+      // if(Math.random()> 0.5) {
+      //   console.log('has Chart......')
+      //   newRes.isChart = true;
+      // }
       messages.value.push(newRes);  
     })
 

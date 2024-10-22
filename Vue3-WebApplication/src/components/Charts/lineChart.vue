@@ -11,28 +11,41 @@ import { onMounted, ref } from 'vue';
 const myCharts = ref<HTMLDivElement | null>(null); 
 const {msg, data} = defineProps({msg: String, data: Object})
 
+const absChartData = data.chartData.data.map(x =>Math.abs(x))
 onMounted(()=>{
     initChart()
 })
 
 const initChart = ()=>{
     const chart = echarts.init(myCharts.value);
+    let chartData = data.chartData;
     chart.setOption({
         title: {
-            // text: 'ECharts 入门示例'
+            text: chartData.text
         },
         tooltip: {},
         xAxis: {
-            data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+            data: chartData.xAxis
         },
         yAxis: {},
         series: [
-            {
-            name: '销量',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
-            }
-        ]
+              {
+                name: 'impact',
+                type: 'bar',
+                data: absChartData,
+                itemStyle: {  
+                    color: function (params) { 
+                        console.log(params)
+                        chartData.data[params.dataIndex]
+                        if (chartData.data[params.dataIndex] > 0) { // 注意：这里的params.value是基于传入的数据（可能是处理后的数据）  
+                            return 'red';  
+                        } else {  
+                            return 'green';  
+                        }  
+                    }  
+                }, 
+              }
+            ]
         });
   }
 </script>
