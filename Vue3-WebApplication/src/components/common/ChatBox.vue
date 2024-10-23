@@ -53,7 +53,7 @@ onMounted(()=> {
 
 
 const messages = ref<Message[]>([  
-  {text: "hello, I am AI assistant for AUP Economic.  What can I do for you?", isSender: false}
+  {text: "Hello, I am AUP AI Assistant.  What can I do for you?", isSender: false}
 ]);  
 
 const newMessage = ref<string>('');  
@@ -206,7 +206,7 @@ const convertString = (number) => {
   
 .receiver {  
   align-self: flex-start; /* 左对齐 */  
-  background-color: #ffe4e1; /* 接收者消息背景色 */  
+  background-color: #e1f9ff; /* 接收者消息背景色 */  
   color: #8b0000; /* 接收者消息文字颜色 */  
 }  
   
