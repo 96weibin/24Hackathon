@@ -15,7 +15,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-using static knowledgeBase.DataContract.FamilyContract;
 
 namespace knowledgeBase.Controllers
 {
@@ -89,7 +88,7 @@ namespace knowledgeBase.Controllers
         public async Task<IHttpActionResult> test(string queryContent)
         {
             //string requestUrl = UpdateUrl(modelName);
-            string requestUrl = $"http://10.148.82.74/aspentech/aspenunified/api/v1/model/Gulf%20Coast/graphql";
+            string requestUrl = $"http://psc-w2022-ch.qae.aspentech.com/aspentech/aspenunified/api/v1/model/Gulf%20Coast/graphql";
 
             var encoding = Encoding.UTF8;
             var content = $"{{'query':'{queryContent}', 'variables': null, 'operationName': null}}";

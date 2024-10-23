@@ -35,7 +35,6 @@ import axios from 'axios';
 import LineChart from '../Charts/lineChart.vue';
 import OptimizationResult from '../common/OptimizationResult.vue'
 import {ChatResult, ChatService} from '../../services/chatService'
-import { tr } from 'element-plus/es/locale';
 interface Message {  
   text: string;  
   showtemplate?: boolean;
