@@ -48,7 +48,29 @@ interface Message {
 const chatService = new ChatService();
 onMounted(()=> {
 
-  chatService.graphQlTest('{"query": "query { cases { items { name } } }"}');
+  chatService.addCase({
+    caseInput:{name: "EE",
+    parentCaseName: "Base Model"}}).then(ret => {
+      console.log(ret);
+      
+    })
+      
+  //   //chatService.graphQlTest('{"query": "query { cases { items { name } } }"}');  
+  // })
+  // chatService.adjustMargin({
+  //   intent:{
+  //     caseName: 'Base Case',
+  //     modelName: 'Gulf Coast2',
+  //     nonBasisType: 1,
+  //     question: "string",
+  //     topNumber: 5
+  //   },
+  //   caseName1:"Base Case",
+  //   caseName2: "Crude Cost - $2"
+  // }).then(ret => {
+  //   console.log(ret);
+    
+  // })
 })
 
 
@@ -60,7 +82,20 @@ const messages = ref<Message[]>([
 const newMessage = ref<string>('');  
 
 
-const accept = (item)=> {
+const accept = async (item)=> {
+  await chatService.adjustMargin({
+    intent:{
+              caseName: 'Base Model',
+              modelName: 'Gulf Coast2',
+              nonBasisType: 1,
+              question: "string",
+              topNumber: 5
+            },
+            caseName1:"d",
+            caseName2: "s"
+  }).then(ret => {
+    
+  })
   messages.value.push({ text: item, isSender: true });  
   let newRes: Message = { 
     text: "allready updated this is results", 
@@ -80,7 +115,7 @@ const sendMessage = (message?: string) => {
   let sendStr = newMessage.value.trim().length == 0? message: newMessage.value.trim();
   if (sendStr) {  
     messages.value.push({ text: sendStr, isSender: true });  
-    chatService.postIntent(sendStr).then((res) => {
+    chatService.postIntent(sendStr).then(async (res) => {
       let data:ChatResult = res.data as ChatResult;
       let newRes: Message = { 
         text: "", 
@@ -106,7 +141,14 @@ const sendMessage = (message?: string) => {
 
           }
 
-          chatService.postFindTopMargin(
+          await chatService.postFindTopMargin(
+            // {
+            //   caseName: data.caseName,
+            //   modelName: data.modelName,
+            //   nonBasisType: data.nonBasisType,
+            //   question: data.question,
+            //   topNumber: data.topNumber
+            // }
               {
               caseName: 'Base Model',
               modelName: 'Gulf Coast2',
@@ -115,8 +157,7 @@ const sendMessage = (message?: string) => {
               topNumber: 5
             }
             ).then(ret => {
-              console.log(ret);
-              newRes.text = `            `
+              newRes.text = ``
               newRes.showtemplate = true;
               newRes.isChart = true;
               var xAxis = [];
@@ -144,8 +185,8 @@ const sendMessage = (message?: string) => {
           newRes.text = "success"
           break;
       }
-      
       messages.value.push(newRes);  
+
     })
 
     // 清空输入框  
@@ -207,7 +248,7 @@ const convertString = (number) => {
   
 .receiver {  
   align-self: flex-start; /* 左对齐 */  
-  background-color: #ffe4e1; /* 接收者消息背景色 */  
+  background-color: #faf8f8cd; /* 接收者消息背景色 */  
   color: #8b0000; /* 接收者消息文字颜色 */  
 }  
   

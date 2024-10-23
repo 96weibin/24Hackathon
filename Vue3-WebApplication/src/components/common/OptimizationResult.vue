@@ -4,20 +4,9 @@
             Sure, we've found the results of your last optimization, which were for model [{{data.modelName}}]'s [{{data.caseName}}] case. Below are the top [{{data.topNumber}}] factors that have the most significant impact on economic benefits:
         </div>
             <ul>
-                <li>
-                    [Factor 1] - The [purchase  ] of [Factor 1]  , contributing to [percentage] % of impact.
-                </li>
-                <li>
-                    [Factor 2] - The [Sale] of [Factor 2]  , contributing to [percentage] % of impact.
-                </li>
-                <li>
-                    [Factor 3] - The [Sale] of [Factor 3]  , contributing to [percentage] % of impact.
-                </li>
-                <li>
-                    [Factor 4] - The [Sale] of [Factor 4]  , contributing to [percentage] % of impact.
-                </li>
-                <li>
-                    [Factor 5] - The [Sale] of [Factor 5]  , contributing to [percentage] % of impact.
+                <li v-for="(item, i) in chartData.data" key="item">
+
+                    [{{chartData.xAxis[i]}}] - The [{{chartData.text}}  ] of [{{chartData.xAxis[i]}}]  , contributing to [{{ item }}] % of impact.
                 </li>
             </ul>
             <div>
@@ -27,9 +16,15 @@
 </template>
 
 <script lang="ts" setup >
+import { onMounted } from 'vue';
 import {ChatResult, ChatService} from '../../services/chatService'
 
 const {data} = defineProps({data: Object})
+const chartData = data.chartData
+onMounted(() => {
+
+    console.log(data)
+})
 
 // data.value = {
 //     caseName :"Base",

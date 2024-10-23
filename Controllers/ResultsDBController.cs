@@ -112,5 +112,69 @@ namespace knowledgeBase.Controllers
             }
         }
 
+        [Route("AdjustMargin")]
+        [HttpPost]
+        public async Task<AdjustMarginResponse> AdjustMargin([FromBody] AdjustMarginRequest request)
+        {
+            var result = new AdjustMarginResponse();
+
+            var conn = DbContextFactory.GetOpenSqlConnection();
+
+            if (string.IsNullOrEmpty(request.intent.ModelName)) // get modelName from last solution if it is missing from Intent.
+            {
+                using (SqlCommand command = new SqlCommand("GetDefaultModel", conn))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    // Add an output parameter to the command
+                    SqlParameter modelNameParameter = new SqlParameter("@ModelName", SqlDbType.NVarChar, 100);
+                    modelNameParameter.Direction = ParameterDirection.Output;
+                    command.Parameters.Add(modelNameParameter);
+
+                    await command.ExecuteReaderAsync();
+
+                    // Read the output parameter value
+                    request.intent.ModelName = modelNameParameter.Value.ToString();
+                }
+            }
+            result.Intent = new Intent()
+            {
+                CaseName = request.intent.CaseName,
+                ModelName = request.intent.ModelName
+            };
+            using (SqlCommand command = new SqlCommand("CompareObjInTwoCases", conn))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter modelNameParameter = new SqlParameter("@ModelName", SqlDbType.NVarChar, 100);
+                modelNameParameter.Direction = ParameterDirection.Input;
+                modelNameParameter.Value = request.intent.ModelName;
+                SqlParameter caseName1Parameter = new SqlParameter("@CaseName1", SqlDbType.NVarChar, 100);
+                caseName1Parameter.Direction = ParameterDirection.Input;
+                caseName1Parameter.Value = request.CaseName1;
+                SqlParameter caseName2Parameter = new SqlParameter("@CaseName2", SqlDbType.NVarChar, 100);
+                caseName2Parameter.Direction = ParameterDirection.Input;
+                caseName2Parameter.Value = request.CaseName2;
+                SqlParameter obj1Parameter = new SqlParameter("@Obj1", SqlDbType.Float, 100);
+                obj1Parameter.Direction = ParameterDirection.Output;
+                SqlParameter obj2Parameter = new SqlParameter("@Obj2", SqlDbType.Float, 100);
+                obj2Parameter.Direction = ParameterDirection.Output;
+
+                command.Parameters.Add(modelNameParameter);
+                command.Parameters.Add(caseName1Parameter);
+                command.Parameters.Add(caseName2Parameter);
+                command.Parameters.Add(obj1Parameter);
+                command.Parameters.Add(obj2Parameter);
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                   
+                        result.Obj1 = (double)obj1Parameter.Value;
+                        result.Obj2 = (double)obj2Parameter.Value;
+                }
+            }
+            return result;
+        }
+
     }
 }

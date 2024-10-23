@@ -11,7 +11,7 @@ import { onMounted, ref } from 'vue';
 const myCharts = ref<HTMLDivElement | null>(null); 
 const {msg, data} = defineProps({msg: String, data: Object})
 
-const absChartData = data.chartData.data.map(x =>Math.abs(x))
+const absChartData = data.chartData.data;
 onMounted(()=>{
     initChart()
 })
@@ -19,6 +19,8 @@ onMounted(()=>{
 const initChart = ()=>{
     const chart = echarts.init(myCharts.value);
     let chartData = data.chartData;
+    console.log('xAx............')
+    console.log(data)
     chart.setOption({
         title: {
             text: chartData.text
@@ -30,7 +32,7 @@ const initChart = ()=>{
         yAxis: {},
         series: [
               {
-                name: 'impact',
+                name: 'Margin',
                 type: 'bar',
                 data: absChartData,
                 itemStyle: {  
@@ -52,7 +54,7 @@ const initChart = ()=>{
 
 <style scoped>
 .chartContainer{
-        width: 400px;
-        height: 200px;
+        width: 800px;
+        height: 300px;
     }
 </style>
