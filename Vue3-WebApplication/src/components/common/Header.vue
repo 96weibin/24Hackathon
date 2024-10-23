@@ -16,7 +16,7 @@ import { Vue } from "vue-class-component";
 import { useRouter } from "vue-router";
 export default class Header extends Vue {
   private router = useRouter();
-  userSortName = localStorage.getItem("username").substring(0, 2);
+  userSortName = "ABC";
   onSummary() {
     this.router.push({ path: "/summary" });
   }
