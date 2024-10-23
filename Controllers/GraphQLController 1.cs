@@ -87,9 +87,9 @@ namespace knowledgeBase.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> test(string queryContent)
         {
-            //string requestUrl = UpdateUrl(modelName);
-            string requestUrl = $"http://psc-w2022-ch.qae.aspentech.com/aspentech/aspenunified/api/v1/model/Gulf%20Coast/graphql";
-
+        //string requestUrl = UpdateUrl(modelName);
+        //string requestUrl = $"http://10.148.82.74/aspentech/aspenunified/api/v1/model/Gulf%20Coast/graphql";
+        string requestUrl = $"http://psc-w2022-ch.qae.aspentech.com/aspentech/aspenunified/api/v1/model/Gulf%20Coast666/graphql";
             var encoding = Encoding.UTF8;
             var content = $"{{'query':'{queryContent}', 'variables': null, 'operationName': null}}";
             _logger.LogInformation($"Executing GraphQL content {content}");
@@ -129,6 +129,7 @@ namespace knowledgeBase.Controllers
         private string UpdateUrl(string modelName)
         {
             //_logger.LogInformation($"Current input name is {modelName}");
+            //string actualUrl = $"http://10.148.82.74/aspentech/aspenunified/api/v1/model/{modelName}/graphql";
             string actualUrl = $"http://psc-w2022-ch.qae.aspentech.com/aspentech/aspenunified/api/v1/model/{modelName}/graphql";
             return actualUrl;
         }
@@ -143,7 +144,7 @@ namespace knowledgeBase.Controllers
             }
             try
             {
-                string result = await _Execute(request.ModelName, request.QueryContent);
+                string result = await _Execute("Gulf Coast666", request.QueryContent);
                 return Ok(result);
             }
             catch (WebException ex)
@@ -193,6 +194,68 @@ namespace knowledgeBase.Controllers
             }
         }
 
+        [Route("AddCase")]
+        [HttpPost]
+        public async Task<IHttpActionResult> AddCaseGraphQL([FromBody] CaseInputRequest request) {
+            var mutationString = BuildMutation(request.caseInput, request.salesInputs, request.processLimitsInputs, request.purchaseInputs, request.capacitiesInputs);
+            string result = await _Execute("Gulf Coast666", mutationString);
+            return Ok(result);
+        }
+
+        public static string BuildMutation(
+                CaseInput caseInput,
+                List<UpdateVaribelInput> salesInputs = null,
+                List<UpdateVaribelInput> processLimitsInputs = null,
+                List<UpdateVaribelInput> purchaseInputs = null,
+                List<UpdateVaribelInput> capacitiesInputs = null)
+        {
+            string mutation = $@"
+            mutation {{
+                cases {{
+                    add(input: {{
+                        name: ""{caseInput.Name}""
+                        parentCaseName: ""{caseInput.ParentCaseName}""
+                        }}) {{
+                   name";
+            if (salesInputs != null && salesInputs.Count > 0)
+            {
+                string salesInputsJson = JsonConvert.SerializeObject(salesInputs);
+                mutation += $@"
+                   updateSales(inputs: {salesInputsJson}) {{
+                       id
+                   }}";
+            }
+            if (processLimitsInputs != null && processLimitsInputs.Count > 0)
+            {
+                string processLimitsJson = JsonConvert.SerializeObject(processLimitsInputs);
+                mutation += $@"
+                   updateProcessLimits(inputs: {processLimitsJson}) {{
+                       id
+                   }}";
+            }
+            if (purchaseInputs != null && purchaseInputs.Count > 0)
+            {
+                string purchaseInputsJson = JsonConvert.SerializeObject(purchaseInputs);
+                mutation += $@"
+                   updatePurchases(inputs: {purchaseInputsJson}) {{
+                       id
+                   }}";
+            }
+            if (capacitiesInputs != null && capacitiesInputs.Count > 0)
+            {
+                string capacitiesInputsJson = JsonConvert.SerializeObject(capacitiesInputs);
+                mutation += $@"
+                   updateCapacities(inputs: {capacitiesInputsJson}) {{
+                       id
+                   }}";
+            }
+            // 关闭 mutation
+            mutation += @"
+                }
+            }
+            }";
+            return mutation;
+        }
 
 
         private string _itemName;
@@ -218,5 +281,35 @@ namespace knowledgeBase.Controllers
             public readonly static Type Field = new Type("field");
 
         }
+
+        public class CaseInputRequest
+        {
+            public CaseInput caseInput { get; set; }
+            public List<UpdateVaribelInput> salesInputs { get; set; }
+            public List<UpdateVaribelInput> processLimitsInputs { get; set; }
+            public List<UpdateVaribelInput> purchaseInputs { get; set; }
+            public List<UpdateVaribelInput> capacitiesInputs { get; set; }
+        }
+
+
+        public class CaseInput
+        {
+            public string Name { get; set; }
+            public string ParentCaseName { get; set; }
+        }
+
+        public class UpdateVaribelInput
+        {
+            public string Name { get; set; }
+            public List<FieldInput> Inputs { get; set; }
+        }
+
+        public class FieldInput
+        {
+            public string Field { get; set; }
+            public int Max { get; set; }
+            public int Min { get; set; }
+        }
+
     }
 }

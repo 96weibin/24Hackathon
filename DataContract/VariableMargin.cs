@@ -23,4 +23,18 @@ namespace knowledgeBase.DataContract
 
         public double HighBound { get; set; }
     }
+
+    public class AdjustMarginResponse
+    {
+        public double Obj1 { get; set; }
+        public double Obj2 { get; set; }
+        public Intent Intent { get; set; }
+    }
+
+    public class AdjustMarginRequest
+    {
+        public string CaseName1 { get; set; }
+        public string CaseName2 { get; set; }
+        public Intent intent { get; set; }
+    }
 }
