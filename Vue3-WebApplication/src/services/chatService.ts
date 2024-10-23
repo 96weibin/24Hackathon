@@ -11,14 +11,24 @@ export class ChatService {
         let url = 'GraphQL/Execute'
         return WebApi.post(url, {ModelName: "Gulf Coast", QueryContent: `query { cases { items { name } } }`})
     }
+
+    public postFindTopMargin(str: ChatResult){
+        let url= `aupdb/FindTopMargin`;
+        return WebApi.post<IFindTopResponse>(url, str)
+    }
 }
 
 export interface ChatResult {
-    caseName?: string,
-    category: number,
-    confidenceScore: number,
+    caseName: string,
+    category?: number,
+    confidenceScore?: number,
     modelName: string,
     nonBasisType: number,
     question: string,
     topNumber: number
 }
+
+export interface IFindTopResponse {
+    intent: ChatResult,
+    margins: any[]
+ }

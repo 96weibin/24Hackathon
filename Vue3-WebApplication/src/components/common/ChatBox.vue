@@ -48,7 +48,7 @@ interface Message {
 const chatService = new ChatService();
 onMounted(()=> {
 
-  chatService.graphQlTest('{"query": "query { cases { items { name } } }"}')
+  chatService.graphQlTest('{"query": "query { cases { items { name } } }"}');
 })
 
 
@@ -106,14 +106,32 @@ const sendMessage = (message?: string) => {
 
           }
 
-          newRes.text = `            `
-          newRes.showtemplate = true
-          newRes.isChart = true
-          newRes.data.chartData = {
-            xAxis: ['Factor 1', 'Factor 2', 'Factor 3', 'Factor 4', 'Factor 5'],
-            text: 'Sale',
-            data: [5, -5, 10, 8,-3]
-          }
+          chatService.postFindTopMargin(
+              {
+              caseName: 'Base Model',
+              modelName: 'Gulf Coast2',
+              nonBasisType: 1,
+              question: "string",
+              topNumber: 5
+            }
+            ).then(ret => {
+              console.log(ret);
+              newRes.text = `            `
+              newRes.showtemplate = true;
+              newRes.isChart = true;
+              var xAxis = [];
+              var marginData = [];
+              ret.data.margins.forEach(x => {
+                xAxis.push(x.variableName);
+                marginData.push(x.margin);
+              }); 
+
+              newRes.data.chartData = {
+                xAxis: xAxis,
+                text:  convertString(ret.data.intent.nonBasisType),
+                data: marginData
+              }
+            })
           break;
         case 2: 
             newRes.text = "The adjusted target value is 1899, which is a 15% increase from the previous result of 1500. Would you like me to create a new case for you?"
@@ -134,6 +152,21 @@ const sendMessage = (message?: string) => {
     newMessage.value = '';  
   }  
 };  
+
+const convertString = (number) => {
+  switch (number) {
+    case 1:
+      return "Purchase";
+    case 2:
+      return "Sales";
+    case 3:
+      return "Capacity";
+    case 4:
+      return "ProcLimit";
+    default:
+      return "All";
+  }
+}
   
 </script>  
   
