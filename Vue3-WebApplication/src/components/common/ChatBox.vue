@@ -8,10 +8,11 @@
       >  
         <span>{{ message.text }}</span>  
         <OptimizationResult v-if="message.showtemplate" :data="message.data"></OptimizationResult>
-        <LineChart :data="message.data" :msg="message.text" v-if="message.isChart"></LineChart>
+        <AdjustedResult v-if="message.isAdust" :data="message.data"></AdjustedResult>
+        
         
         <div v-for="(item, index) in message.buttons" :key="index">
-          <el-button style="margin-top: 5px;" type="info" @click="item.callback? item.callback(item.text): sendMessage(item.text)">{{item.text}}</el-button>
+          <el-button style="margin-top: 5px;" type="success" @click="item.callback? item.callback(item.text): sendMessage(item.text)">{{item.text}}</el-button>
         </div>
 
       </div>  
@@ -34,6 +35,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import LineChart from '../Charts/lineChart.vue';
 import OptimizationResult from '../common/OptimizationResult.vue'
+import AdjustedResult from '../common/AdjustedResult.vue'
 import {ChatResult, ChatService} from '../../services/chatService'
 interface Message {  
   text: string;  
@@ -42,20 +44,41 @@ interface Message {
   isChart?: boolean;
   buttons?: {text: string, callback?: Function}[];
   data?: any;
+  isAdust?: boolean;
 
 }  
 const chatService = new ChatService();
 onMounted(()=> {
 
-  chatService.addCase({
-    caseInput:{name: "EE",
-    parentCaseName: "Base Model"}}).then(ret => {
+  // chatService.addCase({
+  //   caseInput:{name: "EE",
+  //   parentCaseName: "Base Model"}}).then(ret => {
+  //     console.log(ret);
+      
+  //   })
+      //run Cat Cracker RTT vs FDR Study (Base) case
+     chatService.graphQlTest('{"query": "query { cases { items { name } } }"}').then(ret => {
       console.log(ret);
       
-    })
-      
-  //   //chatService.graphQlTest('{"query": "query { cases { items { name } } }"}');  
+     });  
+
+  //    chatService.adjustMargin({
+  //   intent:{
+  //             caseName: 'Base Model',
+  //             modelName: 'Gulf Coast2',
+  //             nonBasisType: 1,
+  //             question: "string",
+  //             topNumber: 5
+  //           },
+  //           caseName1:"Crude Cost - $2",
+  //           caseName2: "Crude Cost - $1.5"
+  // }).then(ret => {
+  //   console.log(ret);
+    
+    
   // })
+
+  })
   // chatService.adjustMargin({
   //   intent:{
   //     caseName: 'Base Case',
@@ -70,7 +93,6 @@ onMounted(()=> {
   //   console.log(ret);
     
   // })
-})
 
 
 
@@ -82,32 +104,8 @@ const newMessage = ref<string>('');
 
 
 const accept = async (item)=> {
-  await chatService.adjustMargin({
-    intent:{
-              caseName: 'Base Model',
-              modelName: 'Gulf Coast2',
-              nonBasisType: 1,
-              question: "string",
-              topNumber: 5
-            },
-            caseName1:"d",
-            caseName2: "s"
-  }).then(ret => {
-    
-  })
-  messages.value.push({ text: item, isSender: true });  
-  let newRes: Message = { 
-    text: "allready updated this is results", 
-    isSender: false, 
-    data:{}
-  };
-  newRes.isChart = true
-  newRes.data.chartData = {
-    xAxis: ['Factor 1', 'Factor 2', 'Factor 3', 'Factor 4', 'Factor 5'],
-    text: 'OBJ',
-    data: [5, 12, 30, 80, 100]
-  }
-  messages.value.push(newRes);  
+  messages.value.push({text: item, isSender: true})
+  messages.value.push({text: "Ok, I will create a new case.", isSender: false});   
 }
 // 发送消息的方法  
 const sendMessage = (message?: string) => {  
@@ -141,20 +139,20 @@ const sendMessage = (message?: string) => {
           }
 
           await chatService.postFindTopMargin(
-            // {
-            //   caseName: data.caseName,
-            //   modelName: data.modelName,
-            //   nonBasisType: data.nonBasisType,
-            //   question: data.question,
-            //   topNumber: data.topNumber
-            // }
-              {
-              caseName: 'Base Model',
-              modelName: 'Gulf Coast2',
-              nonBasisType: 1,
-              question: "string",
-              topNumber: 5
+            {
+              caseName: data.caseName,
+              modelName: data.modelName,
+              nonBasisType: data.nonBasisType,
+              question: data.question,
+              topNumber: data.topNumber
             }
+            //   {
+            //   caseName: 'Base Model',
+            //   modelName: 'Gulf Coast2',
+            //   nonBasisType: 1,
+            //   question: "string",
+            //   topNumber: 5
+            // }
             ).then(ret => {
               newRes.text = ``
               newRes.showtemplate = true;
@@ -162,19 +160,45 @@ const sendMessage = (message?: string) => {
               var xAxis = [];
               var marginData = [];
               ret.data.margins.forEach(x => {
-                xAxis.push(x.variableName);
+                xAxis.push(x.variableName + `\n (${convertString(x.nonBasisType)})`);
                 marginData.push(x.margin);
               }); 
 
               newRes.data.chartData = {
                 xAxis: xAxis,
                 text:  convertString(ret.data.intent.nonBasisType),
-                data: marginData
+                data: marginData,
               }
             })
           break;
         case 2: 
-            newRes.text = "The adjusted target value is 1899, which is a 15% increase from the previous result of 1500. Would you like me to create a new case for you?"
+
+            await chatService.adjustMargin({
+              intent:{
+                        caseName: 'Base Model',
+                        modelName: 'Gulf Coast2',
+                        nonBasisType: 1,
+                        question: "string",
+                        topNumber: 5
+                      },
+                      caseName1:"Crude Cost - $1.5",
+                      caseName2: "Crude Cost - $2"
+            }).then(ret => {
+              let newRes: Message = { 
+              text: ``, 
+              isSender: false, 
+              data:{}
+            };
+            // newRes.isChart = true
+            newRes.isAdust = true;
+            newRes.data.chartData = {
+              xAxis: ['OBJ1', 'OBJ2'],
+              text: 'OBJ',
+              data: [ret.data.obj1, ret.data.obj2]
+            }
+              
+            messages.value.push(newRes); 
+            })
             newRes.buttons = [
               {text: 'Yes', callback: accept},
               {text: 'No'}
@@ -216,7 +240,7 @@ const convertString = (number) => {
   flex-direction: column;  
   height: 100%; /* 使聊天室充满整个视口高度 */  
   width: 100%;  
-  max-width: 1000px; /* 可根据需要调整宽度 */  
+  max-width: 1200px; /* 可根据需要调整宽度 */  
   margin: 0 auto;  
   box-sizing: border-box;  
   padding: 10px;  
@@ -248,7 +272,6 @@ const convertString = (number) => {
 .receiver {  
   align-self: flex-start; /* 左对齐 */  
   background-color: #faf8f8cd; /* 接收者消息背景色 */  
-  background-color: #e1f9ff; /* 接收者消息背景色 */  
   color: #8b0000; /* 接收者消息文字颜色 */  
 }  
   

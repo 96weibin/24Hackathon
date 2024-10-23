@@ -6,24 +6,30 @@
             <ul>
                 <li v-for="(item, i) in chartData.data" key="item">
 
-                    [{{chartData.xAxis[i]}}] - The [{{chartData.text}}  ] of [{{chartData.xAxis[i]}}]  , contributing to [{{ item }}] % of impact.
+                    [{{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}}] - The [{{chartData.xAxis[i].slice(chartData.xAxis[i].indexOf("(") + 1, chartData.xAxis[i].indexOf(")"))}}  ] of [{{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}}]  , contributing to [{{ item.toFixed(2) }}] % of impact.
                 </li>
             </ul>
             <div>
                 Please review these findings and let us know if you need further analysis
             </div>
+
+            <LineChart :data="data"></LineChart>
     </div>
 </template>
 
 <script lang="ts" setup >
 import { onMounted } from 'vue';
 import {ChatResult, ChatService} from '../../services/chatService'
+import LineChart from '../Charts/lineChart.vue';
 
 const {data} = defineProps({data: Object})
 const chartData = data.chartData
 onMounted(() => {
 
-    console.log(data)
+    console.log("OptimizationResultP:" )
+    console.log(chartData,data);
+    
+    
 })
 
 // data.value = {

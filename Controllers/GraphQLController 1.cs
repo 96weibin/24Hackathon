@@ -144,7 +144,7 @@ namespace knowledgeBase.Controllers
             }
             try
             {
-                string result = await _Execute("Gulf Coast666", request.QueryContent);
+                string result = await _Execute(request.ModelName, request.QueryContent);
                 return Ok(result);
             }
             catch (WebException ex)
