@@ -97,7 +97,8 @@ namespace knowledgeBase.Controllers
                         intent.ModelName = entityValue;
                         break;
                     case "NonBasisType":
-                        if (entityValue.StartsWith("purchase", StringComparison.OrdinalIgnoreCase))
+                        if (entityValue.StartsWith("purchase", StringComparison.OrdinalIgnoreCase) ||
+                            entityValue.StartsWith("crude oils", StringComparison.OrdinalIgnoreCase))
                             intent.NonBasisType = NonBasisType.Purchase;
                         else if (entityValue.StartsWith("sell", StringComparison.OrdinalIgnoreCase)
                             || entityValue.StartsWith("sales", StringComparison.OrdinalIgnoreCase))
@@ -106,6 +107,8 @@ namespace knowledgeBase.Controllers
                             intent.NonBasisType = NonBasisType.Capacity;
                         else if (entityValue.StartsWith("process limit", StringComparison.OrdinalIgnoreCase))
                             intent.NonBasisType = NonBasisType.ProcLimit;
+                        else if (entityValue.StartsWith("operations parameters", StringComparison.OrdinalIgnoreCase))
+                            intent.NonBasisType = NonBasisType.Operation;
                         break;
                     case "TopNumber":
                         if (int.TryParse(entityValue, out int value))
