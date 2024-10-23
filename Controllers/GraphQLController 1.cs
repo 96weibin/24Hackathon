@@ -130,7 +130,7 @@ namespace knowledgeBase.Controllers
         private string UpdateUrl(string modelName)
         {
             //_logger.LogInformation($"Current input name is {modelName}");
-            string actualUrl = $"http://10.148.82.74/aspentech/aspenunified/api/v1/model/{modelName}/graphql";
+            string actualUrl = $"http://psc-w2022-ch.qae.aspentech.com/aspentech/aspenunified/api/v1/model/{modelName}/graphql";
             return actualUrl;
         }
 

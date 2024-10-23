@@ -8,32 +8,32 @@ import Grid from '../views/Grid/Grid.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Login',
-    component: Login
+    name: 'Summary',
+    component: Summary
   },
 
-  {
-    path: '/child',
-    name: 'layout',
-    component: Layout,
-    children: [ {
-      path: '/summary',
-      name: 'Summary',
-      component: Summary
-    },
+  // {
+  //   path: '/child',
+  //   name: 'layout',
+  //   component: Layout,
+  //   children: [ {
+  //     path: '/summary',
+  //     name: 'Summary',
+  //     component: Summary
+  //   },
   
-    {
-      path: '/charts',
-      name: 'charts',
-      component: Charts
-    },
-    {
-      path: '/grid',
-      name: 'grid',
-      component: Grid
-    },
-  ]
-  }
+  //   {
+  //     path: '/charts',
+  //     name: 'charts',
+  //     component: Charts
+  //   },
+  //   {
+  //     path: '/grid',
+  //     name: 'grid',
+  //     component: Grid
+  //   },
+  // ]
+  // }
 ]
 
 const router = createRouter({
