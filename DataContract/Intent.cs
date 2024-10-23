@@ -17,7 +17,8 @@ namespace knowledgeBase.DataContract
         Purchase,
         Sales,
         Capacity,
-        ProcLimit
+        ProcLimit,
+        Operation
     }
  
     public class Intent
