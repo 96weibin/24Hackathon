@@ -9,7 +9,7 @@ export class ChatService {
 // mutation { cases { add(input: { name: "aae" parentCaseName: "Base Model" }){ id name } }}}
     public graphQlTest(query: string) {
         let url = 'GraphQL/Execute'
-        return WebApi.post(url, { ModelName: "Gulf Coast", QueryContent: `mutation {\n           cases {\n               add(input: {\n                   name: \"aaR\"\n                   parentCaseName: \"Base Model\"\n               }){\n                 id\n                 name\n               }\n           }}`})
+        return WebApi.post(url, { ModelName: "Gulf Coast", QueryContent: `mutation{\n    runCases: caseExecution {\n      submitCaseStack(\n        input:{\n          name: \"Job\"\n          cases: [\n            {name: \"Cat Cracker RTT vs FDR Study (Base)\"}\n          ]\n        }\n      )\n      {\n        id\n      }\n    }\n}`})
     }
 
     public addCase(caseInput: ICaseInputRequest) {

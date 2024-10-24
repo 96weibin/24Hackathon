@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="chartContainer" ref="myCharts"></div>
-        {{ msg }}
+        <!-- {{ msg }} -->
     </div>
 </template>
 
@@ -32,20 +32,21 @@ const initChart = ()=>{
         yAxis: {},
         series: [
               {
-                name: 'Margin',
+                // name: ,
                 type: 'bar',
                 data: absChartData,
-                itemStyle: {  
-                    color: function (params) { 
-                        console.log(params)
-                        chartData.data[params.dataIndex]
-                        if (chartData.data[params.dataIndex] > 0) { // 注意：这里的params.value是基于传入的数据（可能是处理后的数据）  
-                            return 'red';  
-                        } else {  
-                            return 'green';  
-                        }  
-                    }  
-                }, 
+                barWidth: 50,
+                // itemStyle: {  
+                //     color: function (params) { 
+                //         console.log(params)
+                //         chartData.data[params.dataIndex]
+                //         if (chartData.data[params.dataIndex] > 0) { // 注意：这里的params.value是基于传入的数据（可能是处理后的数据）  
+                //             return 'red';  
+                //         } else {  
+                //             return 'green';  
+                //         }  
+                //     }  
+                // }, 
               }
             ]
         });
@@ -54,7 +55,7 @@ const initChart = ()=>{
 
 <style scoped>
 .chartContainer{
-        width: 800px;
+        width: 1000px;
         height: 300px;
     }
 </style>
