@@ -411,7 +411,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Help\Changelog.html" />
-    <Content Include="DbScripts\InitData\init.sql" />
+    <Content Include="AddViewsAndSPtoAUPResults 2.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Models\Model1.Context.tt">
@@ -481,6 +481,7 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="AIAssistant_CLU_project.json" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
@@ -510,7 +511,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="DbScripts\migration\" />
+    <Folder Include="DbScripts\" />
     <Folder Include="Views\GlobalSearch\" />
     <Folder Include="Views\QusetionAnswer\" />
     <Folder Include="Views\ResultsDB\" />

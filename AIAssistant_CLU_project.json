@@ -1,0 +1,1083 @@
+{
+    "projectFileVersion": "2022-10-01-preview",
+    "stringIndexType": "Utf16CodeUnit",
+    "metadata": {
+        "projectKind": "Conversation",
+        "settings": {
+            "confidenceThreshold": 0,
+            "normalizeCasing": false,
+            "augmentDiacritics": false
+        },
+        "projectName": "projcreatedinus",
+        "multilingual": false,
+        "description": "aupava",
+        "language": "en-us"
+    },
+    "assets": {
+        "projectKind": "Conversation",
+        "intents": [
+            {
+                "category": "None"
+            },
+            {
+                "category": "FindTopMargin"
+            },
+            {
+                "category": "AdjustMargin"
+            }
+        ],
+        "entities": [
+            {
+                "category": "ModelName",
+                "compositionSetting": "combineComponents"
+            },
+            {
+                "category": "NonBasisType",
+                "compositionSetting": "combineComponents",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "options",
+                            "synonyms": [
+                                {
+                                    "language": "en-us",
+                                    "values": [
+                                        "options",
+                                        "Sales",
+                                        "Purchase",
+                                        "Capacity",
+                                        "Process Limit",
+                                        "capacity",
+                                        "sale",
+                                        "purchase",
+                                        "limitation",
+                                        "Crude oils",
+                                        "operations parameters"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "category": "TopNumber",
+                "compositionSetting": "combineComponents"
+            },
+            {
+                "category": "CaseName",
+                "compositionSetting": "combineComponents",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "InDB",
+                            "synonyms": [
+                                {
+                                    "language": "en-us",
+                                    "values": [
+                                        "InDB",
+                                        "Material Imbalance Case",
+                                        "Cat Cracker RTT vs FDR Study (Base)",
+                                        "Cat Cracker RTT at 996 vs FDR",
+                                        "Base Slate",
+                                        "Amenam",
+                                        "Cat Cracker RTT = 996 vs. FDR = 46",
+                                        "Azeri Light",
+                                        "Ekofisk",
+                                        "Escravos",
+                                        "Escalante",
+                                        "Etame",
+                                        "Forcados",
+                                        "Arab Light",
+                                        "FCC Capacity Test"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        ],
+        "utterances": [
+            {
+                "text": "would you adjust the min max for material",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "can you change the model name?",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Test"
+            },
+            {
+                "text": "what is your name?",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "what is AUP?",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "How to use Pims AO?",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "how to install PIMS?",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "greeting",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "would you optimize the model?",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "can you change the material prices",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Test"
+            },
+            {
+                "text": "can you optimize the model?",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Test"
+            },
+            {
+                "text": "Could you open the model?",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "Can you optimize the top 5 capacity economic factors to achieve superior benefits for the BASE case of the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 25,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 27,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 90,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 107,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Please tweak the process limit factors to boost the economic performance for the BASE case in the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 17,
+                        "length": 13
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 81,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 98,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "I need you to modify top 3 sales factors to optimize the economic gains for the BASE case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 25,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 27,
+                        "length": 5
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 80,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 97,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Would you fine-tune the capacity variables to secure improved economic outcomes for the BASE case of the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 24,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 88,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 105,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Please optimize the purchase factors to elevate economic success for the BASE case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 20,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 73,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 90,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Can you make adjustments to the process limit factors to secure better economic results for the BASE case in the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 32,
+                        "length": 13
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 96,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 113,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Would you tweak the capacity variables to enhance economic profitability for the BASE case in the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 20,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 81,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 98,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "I need you to modify the sales factors to achieve better economic performance in the BASE case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 25,
+                        "length": 5
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 85,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 102,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Please adjust the process limit factors to improve financial outcomes for the BASE case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 18,
+                        "length": 13
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 78,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 95,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Test"
+            },
+            {
+                "text": "Can you optimize the factors to achieve higher economic returns for the BASE case in the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "CaseName",
+                        "offset": 72,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 89,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Test"
+            },
+            {
+                "text": "Would you revise the purchase parameters to increase economic benefits for the BASE case in the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 21,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 79,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 96,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Could you manipulate the process limit factors to elevate economic advantages for the BASE case of the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 25,
+                        "length": 13
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 86,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 103,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Please fine-tune the capacity variables to optimize economic gains for the BASE case in the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 21,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 75,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 92,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Test"
+            },
+            {
+                "text": "Can you make changes to the sales factors to achieve superior economic results for the BASE case in the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 28,
+                        "length": 5
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 87,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 104,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Would you adjust the purchase factors to boost economic benefits in the BASE case of the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 21,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 72,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 89,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "I need you to tweak the factors to maximize economic benefits for the BASE case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "CaseName",
+                        "offset": 70,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 87,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Please modify the parameters to improve economic efficiency in the BASE case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "CaseName",
+                        "offset": 67,
+                        "length": 4
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 84,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Could you optimize the variables to enhance the economic outcomes for the BASE case in the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "AdjustMargin",
+                "entities": [
+                    {
+                        "category": "CaseName",
+                        "offset": 74,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 91,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "I want to know the optimize result",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "can you help me?",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Test"
+            },
+            {
+                "text": "hello",
+                "language": "en-us",
+                "intent": "None",
+                "entities": [],
+                "dataset": "Train"
+            },
+            {
+                "text": "Can you identify the top 5 sales factors that influence the optimized results for the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 25,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 27,
+                        "length": 5
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 86,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Test"
+            },
+            {
+                "text": "What are the top 5 capacity constraints that have an impact on the optimized results in the Cat Cracker RTT = 1004 vs. FDR = 48 case for the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "NonBasisType",
+                        "offset": 17,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 19,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 92,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 141,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Test"
+            },
+            {
+                "text": "Could you show me the top 5 capacity factors that contribute to the optimized output in the Cat Cracker RTT = 1004 vs. FDR = 48 case of the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 26,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 28,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 92,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 140,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "I'd like to know the top 5 capacity factors that play a role in the optimized results for the Cat Cracker RTT = 1004 vs. FDR = 48 case in the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 25,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 27,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 94,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 142,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Please list the top 5 capacity factors that affect the optimized performance in the Cat Cracker RTT = 1004 vs. FDR = 48 case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 20,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 22,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 84,
+                        "length": 34
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 132,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Can you display the top 5 capacity factors influencing the optimized results in the Cat Cracker RTT = 1004 vs. FDR = 48 case in the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 24,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 26,
+                        "length": 8
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 84,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 132,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Can you identify the top 5 process limit constraints that have an impact on the optimized results in the Cat Cracker RTT = 1004 vs. FDR = 48 case for the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 25,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 27,
+                        "length": 13
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 105,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 154,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Would you outline the top 5 process limit factors that contribute to the optimized output in the Cat Cracker RTT = 1004 vs. FDR = 48 case of the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 26,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 28,
+                        "length": 13
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 97,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 145,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Test"
+            },
+            {
+                "text": "I need to know the top 5 process limit factors that play a role in the optimized performance for the Cat Cracker RTT = 1004 vs. FDR = 48 case in the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 23,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 25,
+                        "length": 13
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 101,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 149,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Please reveal the top 5 process limit that influence the optimized results in the Cat Cracker RTT = 1004 vs. FDR = 48 case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 22,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 24,
+                        "length": 13
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 82,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 130,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Can you list the top 5 process limit factors that affect the optimized performance in the Cat Cracker RTT = 1004 vs. FDR = 48 case for the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 21,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 23,
+                        "length": 13
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 90,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 139,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Please list the top 5 selling factors that affect the optimized performance in the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 20,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 22,
+                        "length": 7
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 83,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Test"
+            },
+            {
+                "text": "Can you identify the top 5 sales factors that influence the optimized results for the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 25,
+                        "length": 1
+                    },
+                    {
+                        "category": "NonBasisType",
+                        "offset": 27,
+                        "length": 5
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 86,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "I need to know the top 3 factors that contribute to the objective function results in TEST case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 23,
+                        "length": 1
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 86,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 103,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Can you identify the top 3 factors that affect the objective function results for the case BASE of Gulf Coast model",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 25,
+                        "length": 1
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 91,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 99,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "I'd like to see the top 4 essential factors that contribute to the objective function results in the TEST case of the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 24,
+                        "length": 1
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 101,
+                        "length": 4
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 118,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Please display the top 3 elements that have an impact on the objective function results for the Gulf Coast model.",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 23,
+                        "length": 1
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 96,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Can you show me the top 3 fundamental factors that impact the objective function outcome for the Gulf Coast model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 24,
+                        "length": 1
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 97,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "Can you show me the top 5 non basis factors which impact the economy for the case Cat Cracker RTT = 1014 vs. FDR = 58 in Volume Sample model model?",
+                "language": "en-us",
+                "intent": "FindTopMargin",
+                "entities": [
+                    {
+                        "category": "TopNumber",
+                        "offset": 24,
+                        "length": 1
+                    },
+                    {
+                        "category": "CaseName",
+                        "offset": 82,
+                        "length": 35
+                    },
+                    {
+                        "category": "ModelName",
+                        "offset": 121,
+                        "length": 13
+                    }
+                ],
+                "dataset": "Train"
+            }
+        ]
+    }
+}
