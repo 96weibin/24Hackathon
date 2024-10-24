@@ -33,7 +33,7 @@ namespace knowledgeBase.Controllers
             _logger = logger;
         }
 
-        private async Task<string> _Execute(string modelName, string queryContent)
+        public async Task<string> Execute(string modelName, string queryContent)
         {
             string requestUrl = UpdateUrl(modelName);
             var username = "Administrator";
@@ -144,7 +144,7 @@ namespace knowledgeBase.Controllers
             }
             try
             {
-                string result = await _Execute(request.ModelName, request.QueryContent);
+                string result = await Execute(request.ModelName, request.QueryContent);
                 return Ok(result);
             }
             catch (WebException ex)
@@ -154,7 +154,7 @@ namespace knowledgeBase.Controllers
             }
         }
 
-
+       
         public class GraphQLRequest
         {
             public string ModelName { get; set; }
@@ -198,11 +198,11 @@ namespace knowledgeBase.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> AddCaseGraphQL([FromBody] CaseInputRequest request) {
             var mutationString = BuildMutation(request.caseInput, request.salesInputs, request.processLimitsInputs, request.purchaseInputs, request.capacitiesInputs);
-            string result = await _Execute("Gulf Coast666", mutationString);
+            string result = await Execute("Gulf Coast666", mutationString);
             return Ok(result);
         }
 
-        public static string BuildMutation(
+        public string BuildMutation(
                 CaseInput caseInput,
                 List<UpdateVaribelInput> salesInputs = null,
                 List<UpdateVaribelInput> processLimitsInputs = null,
@@ -219,6 +219,7 @@ namespace knowledgeBase.Controllers
                    name";
             if (salesInputs != null && salesInputs.Count > 0)
             {
+                //wrong
                 string salesInputsJson = JsonConvert.SerializeObject(salesInputs);
                 mutation += $@"
                    updateSales(inputs: {salesInputsJson}) {{
@@ -307,8 +308,7 @@ namespace knowledgeBase.Controllers
         public class FieldInput
         {
             public string Field { get; set; }
-            public int Max { get; set; }
-            public int Min { get; set; }
+            public double Value { get; set; }
         }
 
     }

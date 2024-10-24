@@ -6,7 +6,7 @@
             <ul>
                 <li v-for="(item, i) in chartData.data" key="item">
 
-                    [{{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}}] - The [{{chartData.xAxis[i].slice(chartData.xAxis[i].indexOf("(") + 1, chartData.xAxis[i].indexOf(")"))}}  ] of [{{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}}]  , contributing to [{{ item.toFixed(2) }}] % of impact.
+                    {{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}} - The {{chartData.xAxis[i].slice(chartData.xAxis[i].indexOf("(") + 1, chartData.xAxis[i].indexOf(")"))}} of {{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}}, contributing to {{ item.toFixed(2) }} % of impact.
                 </li>
             </ul>
             <div>

@@ -66,7 +66,7 @@ namespace knowledgeBase.Controllers
                 topNumberParameter.Value = intent.TopNumber;
                 SqlParameter basisTypeParameter = new SqlParameter("@BasisType", SqlDbType.Int);
                 basisTypeParameter.Direction = ParameterDirection.Input;
-                basisTypeParameter.Value = intent.NonBasisType;
+                basisTypeParameter.Value = (int)intent.NonBasisType;
 
                 command.Parameters.Add(modelNameParameter);
                 command.Parameters.Add(caseNameParameter);
@@ -77,14 +77,13 @@ namespace knowledgeBase.Controllers
                 {
                     while (reader.Read())
                     {
-                        result.Margins.Add(new VariableMargin()
-                        {
-                            VariableName = reader["BasisFactor"].ToString(),
-                            Margin = (double)reader["Margin"],
-                            LowBound = (double)reader["LoBound"],
-                            HighBound = (double)reader["HiBound"],
-                            NonBasisType = GetNonBasis(reader["Basis"].ToString())
-                        });
+                        var val = new VariableMargin();
+                        val.VariableName = reader["BasisFactor"].ToString();
+                        val.Margin = reader.IsDBNull(2) ? 0 : reader.GetDouble(2);
+                        val.LowBound = reader.IsDBNull(3) ? 0 : reader.GetDouble(3);
+                        val.HighBound = reader.IsDBNull(4) ? 0 : reader.GetDouble(4);
+                        val.NonBasisType = GetNonBasis(reader["Basis"].ToString());
+                        result.Margins.Add(val);
                     }
                 }
 
@@ -116,6 +115,23 @@ namespace knowledgeBase.Controllers
         [HttpPost]
         public async Task<AdjustMarginResponse> AdjustMargin([FromBody] AdjustMarginRequest request)
         {
+            var topRes =  FindTopMargin(request.intent).Result;
+            //topRes.Margins[1].HighBound = 61;
+            var graphQlController = new GraphQLController();
+            var caseInput = new GraphQLController.CaseInput() { Name="aa",ParentCaseName="Base Model"};
+            var input = new GraphQLController.FieldInput() { Field = "Max", Value = 61 };
+            var list = new List<GraphQLController.FieldInput>();
+            var capacitiesInputs = new List<GraphQLController.UpdateVaribelInput>();
+
+            list.Add(input);
+            var capacitiesInput = new GraphQLController.UpdateVaribelInput() { Name = "Cat Cracker BPD", Inputs = list };
+            capacitiesInputs.Add(capacitiesInput);
+            var addNewCase = "mutation\n{\n  cases\n  {\n    add(input:{\n      name:\"ZK\"\n      parentCaseName:\"Base Model\"\n    })\n    {\n      name\n      updateCapacities(inputs:[\n        {\n          name:\"Cat Cracker BPD\",\n          inputs:[\n            {\n              field:Max\n              value:61\n            }\n          ]\n        }\n      ])\n      {\n        id\n      }\n    }\n  }\n}";
+            var runNewCase = "mutation{\n    runCases: caseExecution {\n      submitCaseStack(\n        input:{\n          name: \"Job\"\n          cases: [\n            {name: \"ZK\"}\n          ]\n        }\n      )\n      {\n        id\n      }\n    }\n}";
+                //graphQlController.BuildMutation(caseInput, null, null,null, capacitiesInputs);
+            var ret = await graphQlController.Execute(request.intent.ModelName, addNewCase);
+            var ret1 = await graphQlController.Execute(request.intent.ModelName, runNewCase);
+            request.CaseName2 = "ZK";
             var result = new AdjustMarginResponse();
 
             var conn = DbContextFactory.GetOpenSqlConnection();

@@ -149,9 +149,9 @@ const sendMessage = (message?: string) => {
             //   {
             //   caseName: 'Base Model',
             //   modelName: 'Gulf Coast2',
-            //   nonBasisType: 1,
+            //   nonBasisType: 0,
             //   question: "string",
-            //   topNumber: 5
+            //   topNumber: 4
             // }
             ).then(ret => {
               newRes.text = ``
@@ -173,15 +173,16 @@ const sendMessage = (message?: string) => {
           break;
         case 2: 
 
+            
             await chatService.adjustMargin({
               intent:{
-                        caseName: 'Base Model',
-                        modelName: 'Gulf Coast2',
-                        nonBasisType: 1,
+                        caseName: 'Cat Cracker RTT vs FDR Study (Base)',
+                        modelName: 'Gulf Coast',
+                        nonBasisType: 0,
                         question: "string",
                         topNumber: 5
                       },
-                      caseName1:"Crude Cost - $1.5",
+                      caseName1:"Cat Cracker RTT vs FDR Study (Base)",
                       caseName2: "Crude Cost - $2"
             }).then(ret => {
               let newRes: Message = { 
@@ -301,4 +302,4 @@ const convertString = (number) => {
 .el-button {  
   padding: 5px 15px;  
 }  
-</style>
+</style> 
