@@ -5,12 +5,11 @@
         </div>
             <ul>
                 <li v-for="(item, i) in chartData.data" key="item">
-
-                    {{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}} - The {{chartData.xAxis[i].slice(chartData.xAxis[i].indexOf("(") + 1, chartData.xAxis[i].indexOf(")"))}} of {{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}}, contributing to {{ item.toFixed(2) }} % of impact.
+                    {{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}} - The {{chartData.xAxis[i].slice(chartData.xAxis[i].indexOf("(") + 1, chartData.xAxis[i].indexOf(")"))}} of {{chartData.xAxis[i].slice(0, chartData.xAxis[i].indexOf("\n"))}}. {{ item.toFixed(2)>0 ? "Increase the max value of these variables can increase OBJ " : "Decrease the min value of these variables can increase OBJ"}}.                
                 </li>
             </ul>
             <div>
-                Please review these findings and let us know if you need further analysis
+                Please review these findings and let us know if you need further analysis.
             </div>
 
             <LineChart :data="data"></LineChart>

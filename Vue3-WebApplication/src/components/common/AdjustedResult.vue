@@ -1,8 +1,7 @@
 <template>
     <div>
         <div>
-            The adjusted target value is {{chartData.data[0].toFixed(2)}}, which is a {{num}}% {{isIncrease? "increase" : "decrease"}} from the previous result of {{chartData.data[1].toFixed(2)}}.
-        </div>
+            The new OBJ value is {{chartData.data[1].toFixed(2)}}, which is a {{num}}% {{isIncrease? "increase" : "decrease"}} from the previous result of {{chartData.data[0].toFixed(2)}}.</div>
             <LineChart :data="data"></LineChart>
             
             <div>

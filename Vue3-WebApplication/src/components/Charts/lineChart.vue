@@ -23,7 +23,7 @@ const initChart = ()=>{
     console.log(data)
     chart.setOption({
         title: {
-            text: chartData.text
+            //text: chartData.text
         },
         tooltip: {},
         xAxis: {

@@ -126,12 +126,12 @@ namespace knowledgeBase.Controllers
             list.Add(input);
             var capacitiesInput = new GraphQLController.UpdateVaribelInput() { Name = "Cat Cracker BPD", Inputs = list };
             capacitiesInputs.Add(capacitiesInput);
-            var addNewCase = "mutation\n{\n  cases\n  {\n    add(input:{\n      name:\"ZK\"\n      parentCaseName:\"Base Model\"\n    })\n    {\n      name\n      updateCapacities(inputs:[\n        {\n          name:\"Cat Cracker BPD\",\n          inputs:[\n            {\n              field:Max\n              value:61\n            }\n          ]\n        }\n      ])\n      {\n        id\n      }\n    }\n  }\n}";
-            var runNewCase = "mutation{\n    runCases: caseExecution {\n      submitCaseStack(\n        input:{\n          name: \"Job\"\n          cases: [\n            {name: \"ZK\"}\n          ]\n        }\n      )\n      {\n        id\n      }\n    }\n}";
+            var addNewCase = "mutation\n{\n  cases\n  {\n    add(input:{\n      name:\"FFE\"\n      parentCaseName:\"Base Model\"\n    })\n    {\n      name\n      updateCapacities(inputs:[\n        {\n          name:\"Cat Cracker BPD\",\n          inputs:[\n            {\n              field:Max\n              value:65\n            }\n          ]\n        }\n      ])\n      {\n        id\n      }\n    }\n  }\n}";
+            var runNewCase = "mutation{\n    runCases: caseExecution {\n      submitCaseStack(\n        input:{\n          name: \"Job\"\n          cases: [\n            {name: \"FFE\"}\n          ]\n        }\n      )\n      {\n        id\n      }\n    }\n}";
                 //graphQlController.BuildMutation(caseInput, null, null,null, capacitiesInputs);
             var ret = await graphQlController.Execute(request.intent.ModelName, addNewCase);
             var ret1 = await graphQlController.Execute(request.intent.ModelName, runNewCase);
-            request.CaseName2 = "ZK";
+            request.CaseName2 = "FFE";
             var result = new AdjustMarginResponse();
 
             var conn = DbContextFactory.GetOpenSqlConnection();
