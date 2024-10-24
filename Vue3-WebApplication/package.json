@@ -4,7 +4,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://thomasxiang123.visualstudio.com/KnowledgeBase/_git/KnowledgeBase"
+    "url": "git@github.com:aspentechnology/Hackathon2024.Team11.git"
   },
   
   "scripts": {

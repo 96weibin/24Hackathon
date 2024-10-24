@@ -10,14 +10,15 @@ using knowledgeBase.DAL;
 using knowledgeBase.DataContract;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace knowledgeBase.Controllers
 {
     [RoutePrefix("api/ai")]
     public class CLUController : ApiController
     {
-        private string _projectName = "projcreatedinus";
-        private string _deploymentName = "langdeloy";
+        private string _projectName = ConfigurationManager.AppSettings["AzureCLUProject"]; 
+        private string _deploymentName = ConfigurationManager.AppSettings["AzureCLUDeploy"];
 
         [Route("intent")]
         [HttpPost]

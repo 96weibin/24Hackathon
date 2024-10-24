@@ -4,6 +4,7 @@ using Azure.AI.Language.QuestionAnswering;
 using knowledgeBase.DataContract;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Security.Policy;
@@ -15,8 +16,8 @@ namespace knowledgeBase.DAL
 {
     public class ConversationAnalysisClientFactory
     {
-        private static string _url = "https://langcreatedinus.cognitiveservices.azure.com";
-        private static string _key = "c1c2002fbc0f4af69af1b852d6945293";
+        private static string _url = ConfigurationManager.AppSettings["AzureCLUUrl"]; 
+        private static string _key = ConfigurationManager.AppSettings["AzureCLUKey"];
 
         private static ConversationAnalysisClient _client;
  
