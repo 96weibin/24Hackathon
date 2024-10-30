@@ -7,14 +7,12 @@
         :class="['message', message.isSender ? 'sender' : 'receiver']" 
       >  
         <span>{{ message.text }}</span>  
-        <OptimizationResult v-if="message.showtemplate" :data="message.data"></OptimizationResult>
+        <FindTopMarginResult v-if="message.isFindTopMargin" :data="message.data"></FindTopMarginResult>
         <AdjustedResult v-if="message.isAdust" :data="message.data"></AdjustedResult>
-        
-        
+
         <div v-for="(item, index) in message.buttons" :key="index">
           <el-button style="margin-top: 5px;" type="success" @click="item.callback? item.callback(item.text): sendMessage(item.text)">{{item.text}}</el-button>
         </div>
-
       </div>  
     </div>  
     <div class="input-container">  
@@ -32,20 +30,21 @@
   
 <script lang="ts" setup>  
 import { ref, onMounted } from 'vue';  
-import axios from 'axios';
-import LineChart from '../Charts/lineChart.vue';
-import OptimizationResult from '../common/OptimizationResult.vue'
+import FindTopMarginResult from '../common/FindTopMarginResult.vue'
 import AdjustedResult from '../common/AdjustedResult.vue'
-import {ChatResult, ChatService} from '../../services/chatService'
+import {ChatResult, ChatService, Icategory, IFindTopResponse, IIntent } from '../../services/chatService'
 interface Message {  
   text: string;  
-  showtemplate?: boolean;
   isSender: boolean; // true 表示发送者（右边），false 表示接收者（左边）  
-  isChart?: boolean;
   buttons?: {text: string, callback?: Function}[];
-  data?: any;
-  isAdust?: boolean;
 
+
+  isFindTopMargin?: boolean;
+  isAdust?: boolean;
+  data?:{
+    intentRes?: IIntent;
+    margins?: any[];
+  }
 }  
 const chatService = new ChatService();
 onMounted(()=> {
@@ -77,24 +76,7 @@ onMounted(()=> {
     
     
   // })
-
-  })
-  // chatService.adjustMargin({
-  //   intent:{
-  //     caseName: 'Base Case',
-  //     modelName: 'Gulf Coast2',
-  //     nonBasisType: 1,
-  //     question: "string",
-  //     topNumber: 5
-  //   },
-  //   caseName1:"Base Case",
-  //   caseName2: "Crude Cost - $2"
-  // }).then(ret => {
-  //   console.log(ret);
-    
-  // })
-
-
+})
 
 const messages = ref<Message[]>([  
   {text: "Hello, I am AUP AI Assistant.  What can I do for you?", isSender: false}
@@ -102,137 +84,179 @@ const messages = ref<Message[]>([
 
 const newMessage = ref<string>('');  
 
-
 const accept = async (item)=> {
   messages.value.push({text: item, isSender: true})
   messages.value.push({text: "Ok, I will create a new case.", isSender: false});   
 }
+
 // 发送消息的方法  
-const sendMessage = (message?: string) => {  
+const sendMessage = async (message?: string) => {  
   let sendStr = newMessage.value.trim().length == 0? message: newMessage.value.trim();
   if (sendStr) {  
-    messages.value.push({ text: sendStr, isSender: true });  
-    chatService.postIntent(sendStr).then(async (res) => {
-      let data:ChatResult = res.data as ChatResult;
-      let newRes: Message = { 
-        text: "", 
-        isSender: false, 
-        data
-      };
-      switch (data.category) {
-        case 0:
-          if(data.question.indexOf('?') == -1) {
-            newRes.text = 'You might want to try asking the following questions:'
-          } else {
-            newRes.text = "I'm sorry, I don't quite understand your question, but you might want to try asking the following questions:"
-          }
-          newRes.buttons = [
-            {text: 'Can you show me the top 5 non basis factors which impact the economy? '},
-            {text: 'Can you adjust to non-basis factors to achieve better economic benefits?'}
-          ]
-          break;
-        case 1: 
-          if(data.caseName && data.modelName) {
-            //get model name case name
-          } else {
+    messages.value.push({ text: sendStr, isSender: true }); 
+    resMessage(sendStr) 
+    // chatService.postIntent(sendStr).then(async (res) => {
+    //   let data:ChatResult = res.data as ChatResult;
+    //   let newRes: Message = { 
+    //     text: "", 
+    //     isSender: false, 
+    //   };
+    //   switch (data.category) {
+    //     case 0:
+    //       if(data.question.indexOf('?') == -1) {
+    //         newRes.text = 'You might want to try asking the following questions:'
+    //       } else {
+    //         newRes.text = "I'm sorry, I don't quite understand your question, but you might want to try asking the following questions:"
+    //       }
+    //       newRes.buttons = [
+    //         {text: 'Can you show me the top 5 non basis factors which impact the economy? '},
+    //         {text: 'Can you adjust to non-basis factors to achieve better economic benefits?'}
+    //       ]
+    //       break;
+    //     case 1: 
+    //       if(data.caseName && data.modelName) {
+    //         //get model name case name
+    //       } else {
 
-          }
+    //       }
 
-          await chatService.postFindTopMargin(
-            {
-              caseName: data.caseName,
-              modelName: data.modelName,
-              nonBasisType: data.nonBasisType,
-              question: data.question,
-              topNumber: data.topNumber
-            }
-            //   {
-            //   caseName: 'Base Model',
-            //   modelName: 'Gulf Coast2',
-            //   nonBasisType: 0,
-            //   question: "string",
-            //   topNumber: 4
-            // }
-            ).then(ret => {
-              newRes.text = ``
-              newRes.showtemplate = true;
-              newRes.isChart = true;
-              var xAxis = [];
-              var marginData = [];
-              ret.data.margins.forEach(x => {
-                xAxis.push(x.variableName + `\n (${convertString(x.nonBasisType)})`);
-                marginData.push(x.margin);
-              }); 
+    //       await chatService.postFindTopMargin(
+    //         {
+    //           caseName: data.caseName,
+    //           modelName: data.modelName,
+    //           nonBasisType: data.nonBasisType,
+    //           question: data.question,
+    //           topNumber: data.topNumber
+    //         }
+    //         //   {
+    //         //   caseName: 'Base Model',
+    //         //   modelName: 'Gulf Coast2',
+    //         //   nonBasisType: 0,
+    //         //   question: "string",
+    //         //   topNumber: 4
+    //         // }
+    //         ).then(ret => {
+    //           newRes.text = ``
+    //           newRes.showtemplate = true;
+    //           newRes.isChart = true;
+    //           var xAxis = [];
+    //           var marginData = [];
+    //           ret.data.margins.forEach(x => {
+    //             xAxis.push(x.variableName + `\n (${convertString(x.nonBasisType)})`);
+    //             marginData.push(x.margin);
+    //           }); 
 
-              newRes.data.chartData = {
-                xAxis: xAxis,
-                text:  convertString(ret.data.intent.nonBasisType),
-                data: marginData,
-              }
-            })
-          break;
-        case 2: 
+    //           newRes.data.chartData = {
+    //             xAxis: xAxis,
+    //             text:  convertString(ret.data.intent.nonBasisType),
+    //             data: marginData,
+    //           }
+    //         })
+    //       break;
+    //     case 2: 
 
             
-            await chatService.adjustMargin({
-              intent:{
-                        caseName: 'Cat Cracker RTT vs FDR Study (Base)',
-                        modelName: 'Gulf Coast',
-                        nonBasisType: 0,
-                        question: "string",
-                        topNumber: 5
-                      },
-                      caseName1:"Cat Cracker RTT vs FDR Study (Base)",
-                      caseName2: "Crude Cost - $2"
-            }).then(ret => {
-              let newRes: Message = { 
-              text: ``, 
-              isSender: false, 
-              data:{}
-            };
-            // newRes.isChart = true
-            newRes.isAdust = true;
-            newRes.data.chartData = {
-              xAxis: ['OBJ1', 'OBJ2'],
-              text: 'OBJ',
-              data: [ret.data.obj1, ret.data.obj2]
-            }
+    //         await chatService.adjustMargin({
+    //           intent:{
+    //                     caseName: 'Cat Cracker RTT vs FDR Study (Base)',
+    //                     modelName: 'Gulf Coast',
+    //                     nonBasisType: 0,
+    //                     question: "string",
+    //                     topNumber: 5
+    //                   },
+    //                   caseName1:"Cat Cracker RTT vs FDR Study (Base)",
+    //                   caseName2: "Crude Cost - $2"
+    //         }).then(ret => {
+    //           let newRes: Message = { 
+    //           text: ``, 
+    //           isSender: false, 
+    //           data:{}
+    //         };
+    //         // newRes.isChart = true
+    //         newRes.isAdust = true;
+    //         newRes.data.chartData = {
+    //           xAxis: ['OBJ1', 'OBJ2'],
+    //           text: 'OBJ',
+    //           data: [ret.data.obj1, ret.data.obj2]
+    //         }
               
-            messages.value.push(newRes); 
-            })
-            newRes.buttons = [
-              {text: 'Yes', callback: accept},
-              {text: 'No'}
-            ]
-          break;
-        default:
-          newRes.text = "success"
-          break;
-      }
-      messages.value.push(newRes);  
+    //         messages.value.push(newRes); 
+    //         })
+    //         newRes.buttons = [
+    //           {text: 'Yes', callback: accept},
+    //           {text: 'No'}
+    //         ]
+    //       break;
+    //     default:
+    //       newRes.text = "success"
+    //       break;
+    //   }
+    //   messages.value.push(newRes);  
 
-    })
+    // })
 
-    // 清空输入框  
-    newMessage.value = '';  
+    // // 清空输入框  
+    // newMessage.value = '';  
   }  
 };  
 
-const convertString = (number) => {
-  switch (number) {
-    case 1:
-      return "Purchase";
-    case 2:
-      return "Sales";
-    case 3:
-      return "Capacity";
-    case 4:
-      return "ProcLimit";
+const resMessage = async (sendStr: string) => {
+  let intentRes: IIntent = (await chatService.postIntent(sendStr)).data;
+
+  // let intentRes = {
+  //   caseName : "Cat Cracker RTT vs FDR Study (Base)",
+  //   category : 1,
+  //   confidenceScore: 0.933620453,
+  //   modelName: "Gulf Coast",
+  //   nonBasisType: 0,
+  //   question: "can you get the top 5 factors impact the economy of Base Model case of Gulf Coast model",
+  //   topNumber: 5
+  // }
+
+  let newRes: Message = { 
+    text: "", 
+    isSender: false, 
+    data: {
+      intentRes,
+    }
+  };
+
+  switch (intentRes.category) {
+    case Icategory.None: 
+
+      if(intentRes.question.indexOf('?') == -1) {
+        newRes.text = 'You might want to try asking the following questions:'
+      } else {
+        newRes.text = "I'm sorry, I don't quite understand your question, but you might want to try asking the following questions:"
+      }
+      newRes.buttons = [
+        {text: 'Can you show me the top 5 non basis factors which impact the economy? '},
+        {text: 'Can you adjust to non-basis factors to achieve better economic benefits?'}
+      ]
+
+      break;
+    case Icategory.FindTopMargin:
+      let findTopRes: IFindTopResponse = (await chatService.postFindTopMargin({
+        caseName: intentRes.caseName,
+        modelName: intentRes.modelName,
+        nonBasisType: intentRes.nonBasisType,
+        question: intentRes.question,
+        topNumber: intentRes.topNumber
+      })).data;
+      newRes.isFindTopMargin = true;
+      newRes.data.margins = findTopRes.margins
+      break;
+    case Icategory.AdjustMargin:
+      break;
     default:
-      return "All";
+      newRes.text = "success"
+      break;
   }
+
+  messages.value.push(newRes); 
+  newMessage.value = '';   
 }
-  
+
 </script>  
   
 <style scoped>  
