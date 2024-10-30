@@ -6,13 +6,13 @@ using Azure.AI.Language.Conversations;
 using Azure;
 using System;
 using System.Text.Json;
-using knowledgeBase.DAL;
-using knowledgeBase.DataContract;
+using AIQuestionAnswer.DAL;
+using AIQuestionAnswer.DataContract;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Configuration;
 
-namespace knowledgeBase.Controllers
+namespace AIQuestionAnswer.Controllers
 {
     [RoutePrefix("api/ai")]
     public class CLUController : ApiController

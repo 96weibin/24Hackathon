@@ -1,6 +1,6 @@
 ﻿using GraphQL.Types.Relay.DataObjects;
-using knowledgeBase.DAL;
-using knowledgeBase.DataContract;
+using AIQuestionAnswer.DAL;
+using AIQuestionAnswer.DataContract;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +11,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.UI.WebControls;
 
-namespace knowledgeBase.Controllers
+namespace AIQuestionAnswer.Controllers
 {
     [RoutePrefix("api/aupdb")]
     public class ResultsDBController : ApiController
@@ -21,9 +21,8 @@ namespace knowledgeBase.Controllers
 
         [Route("FindTopMargin")]
         [HttpPost]
-        public async Task<FindTopResponse> FindTopMargin([FromBody] Intent intent)
+        public FindTopResponse FindTopMargin([FromBody] Intent intent)
         {
-
             var result = new FindTopResponse();
 
             var conn = DbContextFactory.GetOpenSqlConnection();
@@ -38,12 +37,21 @@ namespace knowledgeBase.Controllers
                     SqlParameter modelNameParameter = new SqlParameter("@ModelName", SqlDbType.NVarChar, 100);
                     modelNameParameter.Direction = ParameterDirection.Output;
                     command.Parameters.Add(modelNameParameter);
-
-                    await command.ExecuteReaderAsync();
-
+                    command.ExecuteNonQuery();
                     // Read the output parameter value
                     intent.ModelName = modelNameParameter.Value.ToString();
                 }
+            }
+
+            if(string.IsNullOrEmpty(intent.CaseName)) //get case name if it is not provided
+            {
+                string sqlText = "select Top 1 CaseName from RW_CaseDetails where NodeName = @ModelName order by SolutionID DESC";
+                using (SqlCommand command = new SqlCommand(sqlText, conn))
+                {
+                    command.Parameters.AddWithValue("@ModelName", intent.ModelName);
+                    intent.CaseName = command.ExecuteScalar().ToString();
+                }
+ 
             }
             result.Intent = new Intent()
             {
@@ -72,6 +80,7 @@ namespace knowledgeBase.Controllers
                 command.Parameters.Add(caseNameParameter);
                 command.Parameters.Add(topNumberParameter);
                 command.Parameters.Add(basisTypeParameter);
+               
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -115,7 +124,7 @@ namespace knowledgeBase.Controllers
         [HttpPost]
         public async Task<AdjustMarginResponse> AdjustMargin([FromBody] AdjustMarginRequest request)
         {
-            var topRes =  FindTopMargin(request.intent).Result;
+            var topRes =  FindTopMargin(request.intent);
             //topRes.Margins[1].HighBound = 61;
             var graphQlController = new GraphQLController();
             var caseInput = new GraphQLController.CaseInput() { Name="aa",ParentCaseName="Base Model"};
@@ -184,9 +193,8 @@ namespace knowledgeBase.Controllers
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                   
-                        result.Obj1 = (double)obj1Parameter.Value;
-                        result.Obj2 = (double)obj2Parameter.Value;
+                    result.Obj1 = (double)obj1Parameter.Value;
+                    result.Obj2 = (double)obj2Parameter.Value;
                 }
             }
             return result;

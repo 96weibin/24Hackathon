@@ -1,7 +1,6 @@
 ﻿using Azure;
 using Azure.AI.Language.Conversations;
-using Azure.AI.Language.QuestionAnswering;
-using knowledgeBase.DataContract;
+using AIQuestionAnswer.DataContract;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,7 +11,7 @@ using System.Text.Json;
 using System.Web;
 using System.Windows.Input;
 
-namespace knowledgeBase.DAL
+namespace AIQuestionAnswer.DAL
 {
     public class ConversationAnalysisClientFactory
     {

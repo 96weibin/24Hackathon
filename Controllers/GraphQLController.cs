@@ -1,5 +1,5 @@
-﻿using knowledgeBase.DAL;
-using knowledgeBase.DataContract;
+﻿using AIQuestionAnswer.DAL;
+using AIQuestionAnswer.DataContract;
 using Microsoft.Build.Framework;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -16,7 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace knowledgeBase.Controllers
+namespace AIQuestionAnswer.Controllers
 {
     [RoutePrefix("api/GraphQL")]
     public class GraphQLController : ApiController
@@ -87,9 +87,9 @@ namespace knowledgeBase.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> test(string queryContent)
         {
-        //string requestUrl = UpdateUrl(modelName);
-        //string requestUrl = $"http://10.148.82.74/aspentech/aspenunified/api/v1/model/Gulf%20Coast/graphql";
-        string requestUrl = $"http://psc-w2022-ch.qae.aspentech.com/aspentech/aspenunified/api/v1/model/Gulf%20Coast666/graphql";
+            //string requestUrl = UpdateUrl(modelName);
+            //string requestUrl = $"http://10.148.82.74/aspentech/aspenunified/api/v1/model/Gulf%20Coast/graphql";
+            string requestUrl = $"http://psc-w2022-ch.qae.aspentech.com/aspentech/aspenunified/api/v1/model/Gulf%20Coast666/graphql";
             var encoding = Encoding.UTF8;
             var content = $"{{'query':'{queryContent}', 'variables': null, 'operationName': null}}";
             _logger.LogInformation($"Executing GraphQL content {content}");
@@ -154,7 +154,7 @@ namespace knowledgeBase.Controllers
             }
         }
 
-       
+
         public class GraphQLRequest
         {
             public string ModelName { get; set; }
@@ -196,7 +196,8 @@ namespace knowledgeBase.Controllers
 
         [Route("AddCase")]
         [HttpPost]
-        public async Task<IHttpActionResult> AddCaseGraphQL([FromBody] CaseInputRequest request) {
+        public async Task<IHttpActionResult> AddCaseGraphQL([FromBody] CaseInputRequest request)
+        {
             var mutationString = BuildMutation(request.caseInput, request.salesInputs, request.processLimitsInputs, request.purchaseInputs, request.capacitiesInputs);
             string result = await Execute("Gulf Coast666", mutationString);
             return Ok(result);
@@ -258,8 +259,6 @@ namespace knowledgeBase.Controllers
             return mutation;
         }
 
-
-        private string _itemName;
 
         public class Type
         {
