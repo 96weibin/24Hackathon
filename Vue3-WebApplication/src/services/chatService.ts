@@ -3,7 +3,7 @@ import { WebApi } from "./webApi";
 export class ChatService {
     public postIntent(str: string) {
         let url = `ai/intent`;
-        return WebApi.post(url, str)
+        return WebApi.post<IIntent>(url, str)
     }
 //  `query { cases { items { name } } }`
 // mutation { cases { add(input: { name: "aae" parentCaseName: "Base Model" }){ id name } }}}
@@ -28,6 +28,22 @@ export class ChatService {
     }
 }
 
+export interface IIntent {
+    caseName: string;
+    category: Icategory;
+    confidenceScore: number;
+    modelName: string;
+    nonBasisType: number;
+    question: string;
+    topNumber: number;
+}
+
+export enum Icategory {
+    None,
+    FindTopMargin,
+    AdjustMargin
+}
+
 export interface ChatResult {
     caseName: string,
     category?: number,
@@ -41,6 +57,25 @@ export interface ChatResult {
 export interface IFindTopResponse {
     intent: ChatResult,
     margins: any[]
+}
+
+export interface IVariableMargin
+{
+    nonBasisType: NonBasisType;
+    variableName: string;
+    margin: number;
+    lowBound: number;
+    highBound: number;
+}
+
+export enum NonBasisType
+{
+    All = 0,
+    Purchase,
+    Sales,
+    Capacity,
+    ProcLimit,
+    Operation
 }
 
 export interface ICaseInputRequest {
