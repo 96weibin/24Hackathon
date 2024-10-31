@@ -30,5 +30,6 @@ namespace AIQuestionAnswer.DataContract
         public string ModelName { get; set; }
         public string CaseName { get; set; }
         public NonBasisType NonBasisType { get; set; }
+
     }
 }

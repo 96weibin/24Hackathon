@@ -29,6 +29,7 @@ namespace AIQuestionAnswer.DataContract
         public double Obj1 { get; set; }
         public double Obj2 { get; set; }
         public Intent Intent { get; set; }
+        public List<VariableMargin> Margins { get; set; }
     }
 
     public class AdjustMarginRequest
