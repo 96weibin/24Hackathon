@@ -17,7 +17,8 @@ onMounted(()=>{
 const initChart = ()=>{
     const chart = echarts.init(myCharts.value);
     chart.setOption({
-        title: { },
+        text: props.chartData.text || "",
+        title: {},
         tooltip: {},
         xAxis: {
             data: props.chartData.xAxis
@@ -30,6 +31,7 @@ const initChart = ()=>{
 export interface IChartData{
     xAxis: string[];
     series: any[];
+    text?: string;
 }
 </script>
 
