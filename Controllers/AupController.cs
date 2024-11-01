@@ -45,23 +45,21 @@ namespace AIQuestionAnswer.Controllers
 
         [Route("AdjustMargin")]
         [HttpPost]
-        public async Task<AdjustMarginResponse> AdjustMargin([FromBody] AdjustMarginRequest request)
+        public async Task<AdjustMarginResponse> AdjustMargin([FromBody] Intent intent)
         {
             var result = new AdjustMarginResponse();
 
-            var topMarginResponse =  FindTopMargin(request.intent);
+            var topMarginResponse =  FindTopMargin(intent);
 
             result.Intent = topMarginResponse.Intent; // update Intent from FindTopMargin for default model and case name.
 
             //AupGraphQLClient client = new AupGraphQLClient();
             //client.AddNewCaseByAdjustMargins(result.Margins, result.Intent.ModelName, result.Intent.CaseName);
 
-            request.CaseName2 = request.CaseName1;
+            string newCaseName = intent.CaseName;
 
-            (result.Obj1, result.Obj2) = DbContextFactory.CompareTwoCasesObj(request.CaseName1, request.CaseName2, request.intent.ModelName);
+            (result.Obj1, result.Obj2) = DbContextFactory.CompareTwoCasesObj(intent.CaseName, newCaseName, intent.ModelName);
 
-            request.intent.CaseName = request.CaseName2;
-            result.Margins = DbContextFactory.GetVariableMargins(request.intent);
             return result;
         }
 
