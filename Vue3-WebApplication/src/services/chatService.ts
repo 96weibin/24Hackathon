@@ -5,8 +5,6 @@ export class ChatService {
         let url = `ai/intent`;
         return WebApi.post<IIntent>(url, str)
     }
-//  `query { cases { items { name } } }`
-// mutation { cases { add(input: { name: "aae" parentCaseName: "Base Model" }){ id name } }}}
     public graphQlTest(query: string) {
         let url = 'GraphQL/Execute'
         return WebApi.post(url, { ModelName: "Gulf Coast", QueryContent: `mutation{\n    runCases: caseExecution {\n      submitCaseStack(\n        input:{\n          name: \"Job\"\n          cases: [\n            {name: \"Cat Cracker RTT vs FDR Study (Base)\"}\n          ]\n        }\n      )\n      {\n        id\n      }\n    }\n}`})
@@ -17,21 +15,21 @@ export class ChatService {
         return WebApi.post(url, caseInput)
     }
 
-    public postFindTopMargin(req: ChatResult) {
-        let url = `aupdb/FindTopMargin`;
+    public postFindTopMargin(req: IIntent) {
+        let url = `aup/FindTopMargin`;
         return WebApi.post<IFindTopResponse>(url, req)
     }
 
-    public adjustMargin(req: AdjustMarginRequest) {
-        let url = `aupdb/AdjustMargin`;
+    public adjustMargin(req: IIntent) {
+        let url = `aup/AdjustMargin`;
         return WebApi.post<AdjustMarginResponse>(url, req)
     }
 }
 
 export interface IIntent {
     caseName: string;
-    category: Icategory;
-    confidenceScore: number;
+    category?: Icategory;
+    confidenceScore?: number;
     modelName: string;
     nonBasisType: number;
     question: string;
@@ -44,18 +42,8 @@ export enum Icategory {
     AdjustMargin
 }
 
-export interface ChatResult {
-    caseName: string,
-    category?: number,
-    confidenceScore?: number,
-    modelName: string,
-    nonBasisType: number,
-    question: string,
-    topNumber: number
-}
-
 export interface IFindTopResponse {
-    intent: ChatResult,
+    intent: IIntent,
     margins: any[]
 }
 
@@ -102,16 +90,8 @@ export interface CaseInput {
     parentCaseName: string
 }
 
-
-export interface AdjustMarginRequest {
-    caseName1: string,
-    caseName2:string, 
-    intent: ChatResult
-}
-
-
 export interface AdjustMarginResponse {
     obj1: number,
     obj2: number,
-    intent: ChatResult
+    intent: IIntent
 }

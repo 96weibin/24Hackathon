@@ -9,7 +9,6 @@
         <span>{{ message.text }}</span>  
         <FindTopMarginResult v-if="message.isFindTopMargin" :data="message.data"></FindTopMarginResult>
         <AdjustedResult v-if="message.isAdust" :data="message.data"></AdjustedResult>
-
         <div v-for="(item, index) in message.buttons" :key="index">
           <el-button style="margin-top: 5px;" type="success" @click="item.callback? item.callback(item.text): sendMessage(item.text)">{{item.text}}</el-button>
         </div>
@@ -29,54 +28,73 @@
 </template>  
   
 <script lang="ts" setup>  
-import { ref, onMounted } from 'vue';  
+import { ref, onMounted, Ref } from 'vue';  
 import FindTopMarginResult from '../common/FindTopMarginResult.vue'
 import AdjustedResult from '../common/AdjustedResult.vue'
-import {ChatResult, ChatService, Icategory, IFindTopResponse, IIntent } from '../../services/chatService'
+import { ChatService, Icategory, IFindTopResponse, IIntent } from '../../services/chatService'
 interface Message {  
   text: string;  
   isSender: boolean; // true 表示发送者（右边），false 表示接收者（左边）  
   buttons?: {text: string, callback?: Function}[];
-
-
   isFindTopMargin?: boolean;
   isAdust?: boolean;
   data?:{
     intentRes?: IIntent;
     margins?: any[];
+    adjustObj?: number[]
   }
 }  
-const chatService = new ChatService();
-onMounted(()=> {
+const intentList: Ref<IIntent[]> = ref([]);
 
-  // chatService.addCase({
-  //   caseInput:{name: "EE",
-  //   parentCaseName: "Base Model"}}).then(ret => {
-  //     console.log(ret);
-      
-  //   })
-      //run Cat Cracker RTT vs FDR Study (Base) case
-     chatService.graphQlTest('{"query": "query { cases { items { name } } }"}').then(ret => {
-      console.log(ret);
-      
-     });  
-
-  //    chatService.adjustMargin({
-  //   intent:{
-  //             caseName: 'Base Model',
-  //             modelName: 'Gulf Coast2',
-  //             nonBasisType: 1,
-  //             question: "string",
-  //             topNumber: 5
-  //           },
-  //           caseName1:"Crude Cost - $2",
-  //           caseName2: "Crude Cost - $1.5"
-  // }).then(ret => {
-  //   console.log(ret);
-    
-    
-  // })
+const intentRes: Ref<IIntent> = ref({
+  caseName : "Cat Cracker RTT vs FDR Study (Base)",
+    category : 1,
+    confidenceScore: 0.933620453,
+    modelName: "Gulf Coast",
+    nonBasisType: 0,
+    question: "can you get the top 5 factors impact the economy of Base Model case of Gulf Coast model",
+    topNumber: 5
 })
+const chatService = new ChatService();
+onMounted(()=> { 
+  initIntentList();
+})
+
+const initIntentList = () => {
+  let listStr = localStorage.getItem("intentList");
+  intentList.value = listStr? JSON.parse(listStr): [intentRes.value];
+  localStorage.setItem('intentList', JSON.stringify(intentList.value))
+}
+
+// miss model name || miss case name
+const findIntent = (intent: IIntent) => {
+  let resIntent = intent;
+  let intentListVal = intentList.value;
+  if(!intent.modelName && !intent.caseName) {
+    resIntent = intentListVal[intentListVal.length - 1];
+  } else if (intent.modelName) {
+    let findModelIntent = intentListVal.find(x => x.modelName == intent.modelName);
+    resIntent = findModelIntent || intent;
+  } else {
+    let findCaseIntent = intentListVal.findLast(x => x.caseName == intent.caseName);
+    intent = findCaseIntent || intent;
+  }
+  resIntent.category = intent.category
+  resIntent.topNumber = intent.topNumber
+  resIntent.nonBasisType = intent.nonBasisType
+  return resIntent;
+}
+
+// 同时有 caseName 和 model Name 的
+const seaveIntent = (intent: IIntent) => {
+  let findModelIntent = intentList.value.find((x) => x.modelName == intent.modelName);
+  if(findModelIntent) {
+    findModelIntent.caseName = intent.caseName;
+  } else {
+    intentList.value.push(intent)
+  }
+  localStorage.setItem('intentList', JSON.stringify(intentList.value))
+}
 
 const messages = ref<Message[]>([  
   {text: "Hello, I am AUP AI Assistant.  What can I do for you?", isSender: false}
@@ -94,137 +112,37 @@ const sendMessage = async (message?: string) => {
   let sendStr = newMessage.value.trim().length == 0? message: newMessage.value.trim();
   if (sendStr) {  
     messages.value.push({ text: sendStr, isSender: true }); 
-    resMessage(sendStr) 
-    // chatService.postIntent(sendStr).then(async (res) => {
-    //   let data:ChatResult = res.data as ChatResult;
-    //   let newRes: Message = { 
-    //     text: "", 
-    //     isSender: false, 
-    //   };
-    //   switch (data.category) {
-    //     case 0:
-    //       if(data.question.indexOf('?') == -1) {
-    //         newRes.text = 'You might want to try asking the following questions:'
-    //       } else {
-    //         newRes.text = "I'm sorry, I don't quite understand your question, but you might want to try asking the following questions:"
-    //       }
-    //       newRes.buttons = [
-    //         {text: 'Can you show me the top 5 non basis factors which impact the economy? '},
-    //         {text: 'Can you adjust to non-basis factors to achieve better economic benefits?'}
-    //       ]
-    //       break;
-    //     case 1: 
-    //       if(data.caseName && data.modelName) {
-    //         //get model name case name
-    //       } else {
+    anwserMessage(sendStr); 
 
-    //       }
-
-    //       await chatService.postFindTopMargin(
-    //         {
-    //           caseName: data.caseName,
-    //           modelName: data.modelName,
-    //           nonBasisType: data.nonBasisType,
-    //           question: data.question,
-    //           topNumber: data.topNumber
-    //         }
-    //         //   {
-    //         //   caseName: 'Base Model',
-    //         //   modelName: 'Gulf Coast2',
-    //         //   nonBasisType: 0,
-    //         //   question: "string",
-    //         //   topNumber: 4
-    //         // }
-    //         ).then(ret => {
-    //           newRes.text = ``
-    //           newRes.showtemplate = true;
-    //           newRes.isChart = true;
-    //           var xAxis = [];
-    //           var marginData = [];
-    //           ret.data.margins.forEach(x => {
-    //             xAxis.push(x.variableName + `\n (${convertString(x.nonBasisType)})`);
-    //             marginData.push(x.margin);
-    //           }); 
-
-    //           newRes.data.chartData = {
-    //             xAxis: xAxis,
-    //             text:  convertString(ret.data.intent.nonBasisType),
-    //             data: marginData,
-    //           }
-    //         })
-    //       break;
-    //     case 2: 
-
-            
-    //         await chatService.adjustMargin({
-    //           intent:{
-    //                     caseName: 'Cat Cracker RTT vs FDR Study (Base)',
-    //                     modelName: 'Gulf Coast',
-    //                     nonBasisType: 0,
-    //                     question: "string",
-    //                     topNumber: 5
-    //                   },
-    //                   caseName1:"Cat Cracker RTT vs FDR Study (Base)",
-    //                   caseName2: "Crude Cost - $2"
-    //         }).then(ret => {
-    //           let newRes: Message = { 
-    //           text: ``, 
-    //           isSender: false, 
-    //           data:{}
-    //         };
-    //         // newRes.isChart = true
-    //         newRes.isAdust = true;
-    //         newRes.data.chartData = {
-    //           xAxis: ['OBJ1', 'OBJ2'],
-    //           text: 'OBJ',
-    //           data: [ret.data.obj1, ret.data.obj2]
-    //         }
-              
-    //         messages.value.push(newRes); 
-    //         })
-    //         newRes.buttons = [
-    //           {text: 'Yes', callback: accept},
-    //           {text: 'No'}
-    //         ]
-    //       break;
-    //     default:
-    //       newRes.text = "success"
-    //       break;
-    //   }
-    //   messages.value.push(newRes);  
-
-    // })
-
-    // // 清空输入框  
-    // newMessage.value = '';  
   }  
 };  
 
-const resMessage = async (sendStr: string) => {
-  let intentRes: IIntent = (await chatService.postIntent(sendStr)).data;
+const checkIntent = (intent: IIntent) => {
+  if(!intent.modelName || !intent.caseName) {
+    intent = findIntent(intent);
+  } else {
+    seaveIntent(intent)
+  }
+  return intent;
+}
 
-  // let intentRes = {
-  //   caseName : "Cat Cracker RTT vs FDR Study (Base)",
-  //   category : 1,
-  //   confidenceScore: 0.933620453,
-  //   modelName: "Gulf Coast",
-  //   nonBasisType: 0,
-  //   question: "can you get the top 5 factors impact the economy of Base Model case of Gulf Coast model",
-  //   topNumber: 5
-  // }
+const anwserMessage = async (sendStr: string) => {
+  debugger
+  let intent = (await chatService.postIntent(sendStr)).data;
+  intentRes.value = checkIntent(intent);
 
+  console.log("ModelName:", intentRes.value.modelName, "CaseName: ", intentRes.value.caseName)
   let newRes: Message = { 
     text: "", 
     isSender: false, 
     data: {
-      intentRes,
+      intentRes: intentRes.value,
     }
   };
 
-  switch (intentRes.category) {
+  switch (intentRes.value.category) {
     case Icategory.None: 
-
-      if(intentRes.question.indexOf('?') == -1) {
+      if(intentRes.value.question.indexOf('?') == -1) {
         newRes.text = 'You might want to try asking the following questions:'
       } else {
         newRes.text = "I'm sorry, I don't quite understand your question, but you might want to try asking the following questions:"
@@ -233,30 +151,29 @@ const resMessage = async (sendStr: string) => {
         {text: 'Can you show me the top 5 non basis factors which impact the economy? '},
         {text: 'Can you adjust to non-basis factors to achieve better economic benefits?'}
       ]
-
       break;
     case Icategory.FindTopMargin:
-      let findTopRes: IFindTopResponse = (await chatService.postFindTopMargin({
-        caseName: intentRes.caseName,
-        modelName: intentRes.modelName,
-        nonBasisType: intentRes.nonBasisType,
-        question: intentRes.question,
-        topNumber: intentRes.topNumber
-      })).data;
+      let findTopRes: IFindTopResponse = (await chatService.postFindTopMargin(intentRes.value)).data;
       newRes.isFindTopMargin = true;
       newRes.data.margins = findTopRes.margins
       break;
     case Icategory.AdjustMargin:
+      let adjRes = (await chatService.adjustMargin(intentRes.value)).data
+      
+      newRes.isAdust = true;
+      newRes.data.adjustObj = [adjRes.obj1, adjRes.obj2];
+      newRes.buttons = [
+        {text: 'Yes', callback: accept},
+        {text: 'No'}
+      ]
       break;
     default:
       newRes.text = "success"
       break;
   }
-
   messages.value.push(newRes); 
-  newMessage.value = '';   
+  newMessage.value = '';
 }
-
 </script>  
   
 <style scoped>  
