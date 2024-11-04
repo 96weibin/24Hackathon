@@ -319,8 +319,7 @@
     <Compile Include="Controllers\AupController.cs" />
     <Compile Include="Controllers\CLUController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="DAL\ConversationAnalysisClientFactory.cs" />
-    <Compile Include="DAL\DbContextFactory.cs" />
+    <Compile Include="DAL\DbContext.cs" />
     <Compile Include="DataContract\Intent.cs" />
     <Compile Include="DataContract\VariableMargin.cs" />
     <Compile Include="Global.asax.cs">
@@ -330,7 +329,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AddViewsAndSPtoAUPResults 2.sql" />
+    <Content Include="AddViewsAndSPtoAUPResults.sql" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="readme.md" />

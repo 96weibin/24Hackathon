@@ -15,7 +15,7 @@ using System.Drawing;
 
 namespace AIQuestionAnswer.DAL
 {
-    public class DbContextFactory
+    public class DbContext
     {        
         private static string _sqlConStr = ConfigurationManager.ConnectionStrings["AupResultsDB"].ConnectionString;
 

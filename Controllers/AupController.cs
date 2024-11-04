@@ -25,19 +25,21 @@ namespace AIQuestionAnswer.Controllers
         {
             var result = new FindTopResponse();
 
-            if (string.IsNullOrEmpty(intent.ModelName)) // get modelName from last solution if it is missing from Intent.
+            // get modelName from last solution if it is missing from Intent.
+            if (string.IsNullOrEmpty(intent.ModelName))
             {
-                intent.ModelName = DbContextFactory.GetLastOptimizeModelName();
+                intent.ModelName = DbContext.GetLastOptimizeModelName();
             }
 
-            if(string.IsNullOrEmpty(intent.CaseName)) //get case name if it is not provided
+            //get case name if it is not provided
+            if (string.IsNullOrEmpty(intent.CaseName)) 
             {
-                intent.CaseName = DbContextFactory.GetOneCaseOfLastOptimizeModel(intent.ModelName);
+                intent.CaseName = DbContext.GetOneCaseOfLastOptimizeModel(intent.ModelName);
  
             }
             result.Intent = intent; 
 
-            result.Margins = DbContextFactory.GetVariableMargins(intent);
+            result.Margins = DbContext.GetVariableMargins(intent);
 
             return result;
         }
@@ -49,16 +51,22 @@ namespace AIQuestionAnswer.Controllers
         {
             var result = new AdjustMarginResponse();
 
+            // find top margins variables from  DB
             var topMarginResponse =  FindTopMargin(intent);
-
             result.Intent = topMarginResponse.Intent; // update Intent from FindTopMargin for default model and case name.
 
-            //AupGraphQLClient client = new AupGraphQLClient();
-            //client.AddNewCaseByAdjustMargins(result.Margins, result.Intent.ModelName, result.Intent.CaseName);
-
-            string newCaseName = intent.CaseName;
-
-            (result.Obj1, result.Obj2) = DbContextFactory.CompareTwoCasesObj(intent.CaseName, newCaseName, intent.ModelName);
+            /// call AUP GraphQL API for a temp case .
+            AupGraphQLClient client = new AupGraphQLClient();
+            string newCaseName = $"{result.Intent.CaseName}_Adjusted{DateTime.Now.TimeOfDay.Milliseconds}";
+            // 1. add a new case by relax the bound for the top margin variables
+            await client.AddNewCaseByAdjustMargins(topMarginResponse.Margins, result.Intent.ModelName, result.Intent.CaseName, newCaseName);
+            // 2. create a job to run the new case
+            string runCaseJobId = await client.RunCase(result.Intent.ModelName, newCaseName);
+            // 3. wait for job finish.
+            await client.WaitForRunCaseJob(result.Intent.ModelName, runCaseJobId, 2);
+            
+            //read the obj of original case and new case from database
+            (result.Obj1, result.Obj2) = DbContext.CompareTwoCasesObj(intent.CaseName, newCaseName, intent.ModelName);
 
             return result;
         }
