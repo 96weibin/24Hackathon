@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            Sure, we've found the results of your last optimization, which were for model [{{intentRes.modelName}}]'s [{{intentRes.caseName}}] case. Below are the top [{{intentRes.topNumber}}] factors that have the most significant impact on economic benefits:
+            Sure, we've found the results of your last optimization, which were for model [{{intentRes.modelName}}]'s [{{intentRes.caseName}}] case. Below are the top [{{intentRes.topNumber}}] factors that have the most significant impact on economic values:
         </div>
         <div style="margin-top: 20px;">Increase the max value of these variables can increase OBJ</div>
             <FindTopGrid :tableData="increaseTableData"></FindTopGrid>
