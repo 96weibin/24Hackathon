@@ -70,17 +70,19 @@ const initIntentList = () => {
 const findIntent = (intent: IIntent) => {
   let resIntent = intent;
   let intentListVal = intentList.value;
+  let findIntent;
   if(!intent.modelName && !intent.caseName) {
-    resIntent = intentListVal[intentListVal.length - 1];
+    findIntent = intentListVal[intentListVal.length - 1];
+    resIntent = findIntent || intent;
   } else if (intent.modelName) {
-    let findModelIntent = intentListVal.find(x => x.modelName == intent.modelName);
-    resIntent = findModelIntent || intent;
+    findIntent = intentListVal.find(x => x.modelName == intent.modelName);
+    resIntent = findIntent || intent;
   } else {
-    let findCaseIntent = intentListVal.findLast(x => x.caseName == intent.caseName);
-    intent = findCaseIntent || intent;
+    findIntent = intentListVal.findLast(x => x.caseName == intent.caseName);
+    resIntent = findIntent || intent;
   }
   resIntent.category = intent.category
-  resIntent.topNumber = intent.topNumber
+  resIntent.topNumber = intent.topNumber || findIntent.topNumber
   resIntent.nonBasisType = intent.nonBasisType
   return resIntent;
 }
@@ -90,6 +92,7 @@ const seaveIntent = (intent: IIntent) => {
   let findModelIntent = intentList.value.find((x) => x.modelName == intent.modelName);
   if(findModelIntent) {
     findModelIntent.caseName = intent.caseName;
+    findModelIntent.topNumber = intent.topNumber;
   } else {
     intentList.value.push(intent)
   }
@@ -118,7 +121,7 @@ const sendMessage = async (message?: string) => {
 };  
 
 const checkIntent = (intent: IIntent) => {
-  if(!intent.modelName || !intent.caseName) {
+  if(!intent.modelName || !intent.caseName || !intent.topNumber) {
     intent = findIntent(intent);
   } else {
     seaveIntent(intent)
