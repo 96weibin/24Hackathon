@@ -17,46 +17,66 @@ namespace AIQuestionAnswer.Controllers
     [RoutePrefix("api/ai")]
     public class CLUController : ApiController
     {
+        private string _url = ConfigurationManager.AppSettings["AzureCLUUrl"];
+        private string _key = ConfigurationManager.AppSettings["AzureCLUKey"];
         private string _projectName = ConfigurationManager.AppSettings["AzureCLUProject"]; 
         private string _deploymentName = ConfigurationManager.AppSettings["AzureCLUDeploy"];
+        /// <summary>
+        /// The ConversationAnalysis client -- [Azure.AI.Language.Conversations.ConversationAnalysisClient]
+        /// </summary>
+        private static ConversationAnalysisClient _client;
 
         [Route("intent")]
         [HttpPost]
         public async Task<Intent> PredictUserIntent([FromBody] string userInput)
         {
-            ConversationAnalysisClient client = ConversationAnalysisClientFactory.GetClient();
+            // create or get the Azure ConversationAnalysis client
+            ConversationAnalysisClient client = GetAzureConversationAnalysisClient();
+            // build the input data with user input string 
             var data = new
             {
                 analysisInput = new
                 {
                     conversationItem = new
                     {
-                        text = userInput,
+                        text = userInput, //user input string
                         id = "1",
                         participantId = "1",
                     }
                 },
                 parameters = new
                 {
-                    projectName =  _projectName,
+                    projectName = _projectName,
                     deploymentName = _deploymentName,
-
-                    // Use Utf16CodeUnit for strings in .NET.
                     stringIndexType = "Utf16CodeUnit",
                 },
                 kind = "Conversation",
             };
 
+            // Analyze Conversation 
             Response response = await client.AnalyzeConversationAsync(RequestContent.Create(data));
 
-             JsonDocument result = JsonDocument.Parse(response.ContentStream);
+            //get the result from the response  
+            JsonDocument result = JsonDocument.Parse(response.ContentStream);
             JsonElement conversationalTaskResult = result.RootElement;
             JsonElement conversationPrediction = conversationalTaskResult.GetProperty("result").GetProperty("prediction");
+            // parse the result Json data to Intent class which defined in this project.
             Intent intent = ParseIntentFromPredictJson(conversationPrediction);
-            intent.Question = userInput;
+            intent.Question = userInput; // pass  user input into Intent.Question field
             return intent;
         }
 
+
+        private ConversationAnalysisClient GetAzureConversationAnalysisClient()
+        {
+            if (_client == null)
+            {
+                Uri endpoint = new Uri(_url);
+                AzureKeyCredential credential = new AzureKeyCredential(_key);
+                _client = new ConversationAnalysisClient(endpoint, credential);
+            }
+            return _client;
+        }
 
         private  Intent ParseIntentFromPredictJson(JsonElement conversationPrediction)
         {

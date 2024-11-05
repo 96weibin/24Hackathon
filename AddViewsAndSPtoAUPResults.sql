@@ -4,13 +4,32 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+IF OBJECT_ID('VIEW_PrimalBasis', 'V') IS NOT NULL Drop View VIEW_PrimalBasis
+GO
 
-/****** Object:  View [dbo].[RW_LastSolutions]    Script Date: 10/24/2024 8:49:26 AM ******/
+IF OBJECT_ID('VIEW_OBJ', 'V') IS NOT NULL Drop View VIEW_OBJ
+GO
 
-CREATE   view [dbo].[RW_LastSolutions]
+IF OBJECT_ID('[VIEW_LastSolutions]', 'V') IS NOT NULL Drop View VIEW_LastSolutions
+GO
+ 
+IF EXISTS (SELECT * FROM sys.procedures WHERE object_id = OBJECT_ID(N'[dbo].[CompareObjInTwoCases]'))
+    DROP PROCEDURE [dbo].[CompareObjInTwoCases]
+GO
+
+IF EXISTS (SELECT * FROM sys.procedures WHERE object_id = OBJECT_ID(N'[dbo].[GetDefaultModel]'))
+    DROP PROCEDURE [dbo].GetDefaultModel
+GO
+
+IF EXISTS (SELECT * FROM sys.procedures WHERE object_id = OBJECT_ID(N'[dbo].[GetTopBasis]'))
+    DROP PROCEDURE [dbo].[GetTopBasis]
+GO
+
+CREATE     view [dbo].[VIEW_LastSolutions]
 as
-select max(solutionId) as SolutionID, ModelName from RW_Solutions
-group by RW_Solutions.ModelName
+select max(solutionId) as SolutionID,  CaseName, NodeName as ModelName from
+  RW_CaseDetails 
+group by  NodeName, CaseName
 GO
 ------------------------------
 CREATE    view [dbo].[VIEW_OBJ]
@@ -27,19 +46,20 @@ GO
 
 ------------------------------
 
-CREATE   view [dbo].[VIEW_PrimalBasis]
+CREATE       view [dbo].[VIEW_PrimalBasis]
 as
 SELECT 
 RW_PrimalColumn.SolutionID,
-RW_LastSolutions.ModelName,
-RW_CaseDetails.CaseName,
- SUBSTRING(ColumnName, 1, LEN(ColumnName) - CHARINDEX(':', REVERSE(ColumnName))) as Basis,
-SUBSTRING(ColumnName, LEN(ColumnName) - CHARINDEX(':', REVERSE(ColumnName)) + 2, LEN(ColumnName)) AS BasisFactor,
+VIEW_LastSolutions.ModelName,
+VIEW_LastSolutions.CaseName,
+ SUBSTRING(ColumnName, 1, CHARINDEX(':', ColumnName) -1) as Basis,
+SUBSTRING(ColumnName, CHARINDEX(':', ColumnName) + 1, LEN(ColumnName)) AS BasisFactor,
 	MarginalValue as Margin, LoBound, HiBound, Cost
 FROM 
-    RW_PrimalColumn inner join RW_LastSolutions on RW_PrimalColumn.SolutionID = RW_LastSolutions.SolutionID
-	left join RW_CaseDetails on RW_PrimalColumn.CaseID = RW_CaseDetails.CaseID and RW_PrimalColumn.SolutionID = RW_CaseDetails.SolutionID 
-where MarginalValue <> 0 and
+    RW_PrimalColumn inner join VIEW_LastSolutions 
+	on RW_PrimalColumn.SolutionID = VIEW_LastSolutions.SolutionID
+where ( MarginalValue >0  or (MarginalValue <0 and LoBound >0))
+and 
 (ColumnName like 'SELL%'
 or ColumnName like 'PURC%'
 or ColumnName like 'CCAP%'
@@ -113,7 +133,7 @@ AS
 BEGIN
     -- Set the output parameter to a specific string value
 
-   select  top 1 @ModelName = modelName  from rw_LastSolutions order by solutionid desc
+   select  top 1 @ModelName = modelName  from VIEW_LastSolutions order by solutionid desc
   
 END
 GO
