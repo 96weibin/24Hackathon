@@ -12,7 +12,11 @@
 # questions 
 
 ```
-Can you show me the top 5 variables impact Gulf Coast model Cat Cracker RTT vs FDR Study (Base) case？
-Show me the top 3 purchase variables of this case.
+Show me the top 3 purchase variables of Gulf Coast model Cat Cracker RTT vs FDR Study (Base) case.
+
+Can you show me the top 5 non-basis variables impact of this case?
+
 Can you adjust these factors to achieve better OBJ?
+
+yes
 ```

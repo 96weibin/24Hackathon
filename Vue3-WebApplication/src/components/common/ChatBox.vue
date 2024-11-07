@@ -133,6 +133,7 @@ const anwserMessage = async (sendStr: string) => {
   debugger
   let intent = (await chatService.postIntent(sendStr)).data;
   intentRes.value = checkIntent(intent);
+  newMessage.value = '';
 
   console.log("ModelName:", intentRes.value.modelName, "CaseName: ", intentRes.value.caseName)
   let newRes: Message = { 
@@ -175,7 +176,6 @@ const anwserMessage = async (sendStr: string) => {
       break;
   }
   messages.value.push(newRes); 
-  newMessage.value = '';
 }
 </script>  
   
