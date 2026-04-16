@@ -66,6 +66,7 @@ const initIntentList = () => {
   localStorage.setItem('intentList', JSON.stringify(intentList.value))
 }
 
+//test
 // miss model name || miss case name
 const findIntent = (intent: IIntent) => {
   let resIntent = intent;
@@ -99,7 +100,7 @@ const seaveIntent = (intent: IIntent) => {
   localStorage.setItem('intentList', JSON.stringify(intentList.value))
 }
 
-const messages = ref<Message[]>([  
+const messages = ref<Message[]>([
   {text: "Hello, I am AUP AI Assistant.  What can I do for you?", isSender: false}
 ]);  
 
@@ -246,4 +247,4 @@ const anwserMessage = async (sendStr: string) => {
 .el-button {  
   padding: 5px 15px;  
 }  
-</style> 
+</style>
